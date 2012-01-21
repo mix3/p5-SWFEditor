@@ -194,8 +194,7 @@ SWFEditor - SWFEditor for Perl
 
     use SWFEditor::Simple;
 
-    my $swfed = SWFEditor->new();
-    # or my $swfed = SWFEditor::Simple->new();
+    my $swfed = SWFEditor::Simple->new();
     $swfed->input('resource/negimiku.swf');
     $swfed->replace_movie_clip('miku', 'resource/saitama3.swf');
     print $swfed->output();
