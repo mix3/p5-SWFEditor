@@ -1,0 +1,11 @@
+.DS_Store
+.config.cache
+MYMETA.json
+MYMETA.yml
+Makefile
+Makefile.old
+SWFEditor.bs
+XS.c
+XS.o
+blib/
+pm_to_blib
