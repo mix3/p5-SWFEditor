@@ -1028,3 +1028,123 @@ get_action_data(swf, tag_seqno)
         RETVAL = newSVpv(data, data_len);
     OUTPUT:
         RETVAL
+
+SV*
+get_shape_id_list_by_bitmap_ref(swf, bitmap_id)
+        swf_object_t   *swf;
+        int             bitmap_id;
+    PREINIT:
+        int             i        = 0;
+        AV*             data     = newAV();
+        swf_tag_t      *tag      = NULL;
+        swf_tag_info_t *tag_info = NULL;
+        int *bitmap_id_list, bitmap_id_list_num;
+    CODE:
+        for (tag = swf->tag_head; tag; tag=tag->next) {
+            register int tag_code = tag->code;
+            if (isShapeTag(tag_code)) {
+                bitmap_id_list = swf_tag_shape_bitmap_get_refcid_list(tag, &bitmap_id_list_num);
+                if (bitmap_id_list) {
+                    int j;
+                    for (j=0 ; j < bitmap_id_list_num ; j++) {
+                        if (bitmap_id_list[j] == bitmap_id) {
+                            swf_tag_shape_detail_t *swf_tag_shape = tag->detail;
+                            av_push(data, newSViv((long)swf_tag_shape->shape_id));
+                            i++;
+                            break;
+                        }
+                    }
+                    free(bitmap_id_list);
+                }
+            }
+        }
+        RETVAL = newRV_inc((SV *)data);
+    OUTPUT:
+        RETVAL
+
+int
+convert_bitmap_data_to_jpeg_tag(swf)
+        swf_object_t *swf;
+    PREINIT:
+        int           ret;
+    CODE:
+        ret = swf_object_convert_bitmapdata_tojpegtag(swf);
+        if (ret) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
+    OUTPUT:
+        RETVAL
+
+int
+apply_shape_matrix_factor(swf, shape_id, scale_x, scale_y, rotate_rad, trans_x, trans_y)
+        swf_object_t *swf;
+        long          shape_id;
+        double        scale_x;
+        double        scale_y;
+        double        rotate_rad;
+        long          trans_x;
+        long          trans_y;
+    PREINIT:
+        int           result;
+    CODE:
+        result = swf_object_apply_shapematrix_factor(swf, shape_id,
+                                                     scale_x, scale_y, rotate_rad,
+                                                     trans_x, trans_y);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
+    OUTPUT:
+        RETVAL
+
+int
+apply_shape_rect_factor(swf, shape_id, scale_x, scale_y, trans_x, trans_y)
+        swf_object_t *swf;
+        long          shape_id;
+        double        scale_x;
+        double        scale_y;
+        long          trans_x;
+        long          trans_y;
+    PREINIT:
+        int           result;
+    CODE:
+        result = swf_object_apply_shaperect_factor(swf, shape_id,
+                                                     scale_x, scale_y,
+                                                     trans_x, trans_y);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
+    OUTPUT:
+        RETVAL
+
+int
+disasm_action_data(swf)
+        swf_object_t      *swf;
+    PREINIT:
+        unsigned char     *data        = NULL;
+        unsigned long      data_len    = 0;
+        bitstream_t       *bs          = NULL;
+        swf_action_list_t *action_list = NULL;
+    CODE:
+        //array_init(return_value);
+        bs = bitstream_open();
+        bitstream_input(bs, (unsigned char*) data, data_len);
+        action_list = swf_action_list_create();
+        swf_action_list_parse(bs, action_list);
+        bitstream_close(bs);
+        if (action_list) {
+            swf_action_t *action = action_list->head;
+            while(action) {
+                printf("\t");
+                action = action->next;
+            }
+        }
+        swf_action_list_destroy(action_list);
+        RETVAL = 1;
+    OUTPUT:
+        RETVAL

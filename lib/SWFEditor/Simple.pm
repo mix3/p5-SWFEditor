@@ -203,6 +203,10 @@ sub set_shape_adjust_mode_type_tilled {
     return shift->super->set_shape_adjust_mode_type_tilled(@_);
 }
 
+sub get_shape_id_list_by_bitmap_ref {
+    return shift->super->get_shape_id_list_by_bitmap_ref(@_);
+}
+
 sub get_jpeg_data {
     return shift->super->get_jpeg_data(@_);
 }
@@ -217,6 +221,18 @@ sub get_png_data {
 
 sub get_bitmap_size {
     return shift->super->get_bitmap_size(@_);
+}
+
+sub convert_bitmap_data_to_jpeg_tag {
+    return shift->super->convert_bitmap_data_to_jpeg_tag(@_);
+}
+
+sub apply_shape_matrix_factor {
+    return shift->super->apply_shape_matrix_factor(@_);
+}
+
+sub apply_shape_rect_factor {
+    return shift->super->apply_shape_rect_factor(@_);
 }
 
 sub get_edit_string {
@@ -241,6 +257,10 @@ sub set_action_variables {
 
 sub replace_action_strings {
     return shift->super->replace_action_strings(@_);
+}
+
+sub disasm_action_data {
+    return shift->super->disasm_action_data(@_);
 }
 
 sub set_compress_level {

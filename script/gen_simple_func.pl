@@ -22,11 +22,15 @@ my @func = qw/
     set_shape_adjust_mode_matrix_rescale
     set_shape_adjust_mode_rect_resize
     set_shape_adjust_mode_type_tilled
+    get_shape_id_list_by_bitmap_ref
 
     get_jpeg_data
     get_jpeg_alpha
     get_png_data
     get_bitmap_size
+    convert_bitmap_data_to_jpeg_tag
+    apply_shape_matrix_factor
+    apply_shape_rect_factor
 
     get_edit_string
     replace_edit_string
@@ -36,6 +40,7 @@ my @func = qw/
     get_action_data
     set_action_variables
     replace_action_strings
+    disasm_action_data
 
     set_compress_level
     purge_useless_contents
