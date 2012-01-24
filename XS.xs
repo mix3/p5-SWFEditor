@@ -191,12 +191,18 @@ _replace_movie_clip(swf, instance_name, swf_data, swf_data_len, unused_cid_purge
         int           unused_cid_purge;
     PREINIT:
         int           instance_name_len = 0;
+        int           result            = 0;
     CODE:
         instance_name_len = strlen((char *)instance_name);
-        RETVAL = swf_object_replace_movieclip(swf, instance_name,
+        result = swf_object_replace_movieclip(swf, instance_name,
                                                    instance_name_len,
                                                    swf_data,
                                                    swf_data_len);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
     OUTPUT:
         RETVAL
 
@@ -215,10 +221,17 @@ _replace_png_data(swf, image_id, data, data_len)
         int           image_id;
         char         *data;
         int           data_len;
+    PREINIT: 
+        int           result = 1;
     CODE:
         RETVAL = swf_object_replace_pngdata(swf, image_id,
                                                  (unsigned char *)data,
                                                  (unsigned long) data_len);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
     OUTPUT:
         RETVAL
 
@@ -261,7 +274,12 @@ replace_edit_string(swf, var_name, ini_text)
         int           result = 0;
         char         *data   = NULL;
     CODE:
-        RETVAL = swf_object_replace_editstring(swf, var_name, var_name_len, ini_text, ini_text_len);
+        result = swf_object_replace_editstring(swf, var_name, var_name_len, ini_text, ini_text_len);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
     OUTPUT:
         RETVAL
 
@@ -283,25 +301,34 @@ rebuild(swf)
     OUTPUT:
         RETVAL
 
-char *
+SV *
 get_shape_data(swf, cid)
         swf_object_t  *swf;
         unsigned long  cid;
     PREINIT:
-        unsigned long data_len = 0;
+        unsigned char *data     = NULL;
+        unsigned long  data_len = 0;
     CODE:
-        RETVAL = swf_object_get_shapedata(swf, cid, &data_len);
+        data = swf_object_get_shapedata(swf, cid, &data_len);
+        RETVAL = newSVpv(data, data_len);
     OUTPUT:
         RETVAL
 
 int
-_replace_shape_data(cid, swf, data, data_len)
+_replace_shape_data(swf, cid, data, data_len)
         swf_object_t  *swf;
         long           cid;
         char          *data;
         unsigned long  data_len;
+    PREINIT:
+        int            result = 0;
     CODE:
-        RETVAL = swf_object_replace_shapedata(swf, cid, (unsigned char *)data, data_len);
+        result = swf_object_replace_shapedata(swf, cid, (unsigned char *)data, data_len);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
     OUTPUT:
         RETVAL
 
@@ -311,10 +338,17 @@ _replace_gif_data(swf, image_id, data, data_len)
         int           image_id;
         char         *data;
         int           data_len;
+    PREINIT:
+        int            result = 0;
     CODE:
-        RETVAL = swf_object_replace_gifdata(swf, image_id,
+        result = swf_object_replace_gifdata(swf, image_id,
                                                  (unsigned char *)data,
                                                  (unsigned long) data_len);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
     OUTPUT:
         RETVAL
 

@@ -10,7 +10,7 @@ my $swfed = SWFEditor::Simple->new();
     my $seqno = 0;
     for my $tag_info (@{$swfed->get_tag_list()}) {
         my $got = $swfed->get_tag_data($seqno);
-        my $expect = get_file_contents('/resource/textvar.tag.'.$seqno);
+        my $expect = get_file_contents('/tag/textvar.tag.'.$seqno);
         is(
             $got,
             $expect,

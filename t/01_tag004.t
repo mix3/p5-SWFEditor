@@ -4,7 +4,7 @@ use SWFEditor;
 
 
 my $d1     = get_file_contents('/resource/textvar.swf');
-my $expect = get_file_contents('/resource/textvar.tag.cid.1');
+my $expect = get_file_contents('/tag/textvar.tag.cid.1');
 
 my $swfed = SWFEditor->new();
 {
