@@ -26,6 +26,8 @@ t/01_png001.t
 t/01_png002.t
 t/01_png003.t
 t/01_png004.t
+t/01_shape001.t
+t/01_shape002.t
 t/01_tag001.t
 t/01_tag002.t
 t/01_tag003.t
@@ -54,6 +56,8 @@ t/02_png001.t
 t/02_png002.t
 t/02_png003.t
 t/02_png004.t
+t/02_shape001.t
+t/02_shape002.t
 t/02_tag001.t
 t/02_tag002.t
 t/02_tag003.t
