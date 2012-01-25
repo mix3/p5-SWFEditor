@@ -1,3 +1,5 @@
+#include "png.h" // must be included before setjmp.h
+
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
