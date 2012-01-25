@@ -31,7 +31,7 @@ our $SHAPE_BITMAP_TYPE_TILLED    = 4;
 sub input {
     my $self = shift;
     my $data = shift;
-    return $self->_input(&_load_data($data));
+    return $self->_input(_load($data));
 }
 
 sub replace_movie_clip {
@@ -41,7 +41,7 @@ sub replace_movie_clip {
     my $unused_cid_purge = shift || 1;
     return $self->_replace_movie_clip(
         $instance_name,
-        &_load_data($data),
+        _load($data),
         $unused_cid_purge,
     );
 }
@@ -52,7 +52,7 @@ sub replace_png_data {
     my $data     = shift;
     return $self->_replace_png_data(
         $image_id,
-        &_load_data($data),
+        _load($data),
     );
 }
 
@@ -80,7 +80,7 @@ sub replace_shape_data {
     my $self = shift;
     my $cid  = shift;
     my $data = shift;
-    return $self->_replace_shape_data($cid, &_load_data($data));
+    return $self->_replace_shape_data($cid, _load($data));
 }
 
 sub replace_gif_data {
@@ -89,7 +89,7 @@ sub replace_gif_data {
     my $data     = shift;
     return $self->_replace_gif_data(
         $image_id,
-        &_load_data($data),
+        _load($data),
     );
 }
 
@@ -103,13 +103,13 @@ sub replace_bitmap_data {
     my $alpha_data_len = 0;
 
     if ($alpha_data) {
-        ($alpha_data, $alpha_data_len) = &_load_data($alpha_data);
+        ($alpha_data, $alpha_data_len) = _load($alpha_data);
     } else {
         ($alpha_data, $alpha_data_len) = (0, 0);
     }
     return $self->_replace_bitmap_data(
         $image_cond,
-        &_load_data($data),
+        _load($data),
         $alpha_data,
         $alpha_data_len,
         $without_converting,
@@ -122,7 +122,7 @@ sub replace_tag_data {
     my $data  = shift;
     return $self->_replace_tag_data(
         $seqno,
-        &_load_data($data),
+        _load($data),
     );
 }
 
@@ -132,7 +132,7 @@ sub replace_tag_data_by_cid {
     my $data = shift;
     return $self->_replace_tag_data_by_cid(
         $cid,
-        &_load_data($data),
+        _load($data),
     );
 }
 
@@ -142,7 +142,7 @@ sub replace_tag_contents_by_cid {
     my $data = shift;
     return $self->_replace_tag_contents_by_cid(
         $cid,
-        &_load_data($data),
+        _load($data),
     );
 }
 
@@ -150,7 +150,7 @@ sub is_shape_tag_data {
     my $self = shift;
     my $data = shift;
     return $self->_is_shape_tag_data(
-        &_load_data($data),
+        _load($data),
     );
 }
 
@@ -158,26 +158,33 @@ sub is_bitmap_tag_data {
     my $self = shift;
     my $data = shift;
     return $self->_is_bitmap_tag_data(
-        &_load_data($data),
+        _load($data),
     );
 }
 
 sub print_tag_data {
     my $self = shift;
     my $data = shift;
-    return $self->_print_tag_data(&_load_data($data));
+    return $self->_print_tag_data(_load($data));
 }
 
 sub remove_tag {
     my $self = shift;
-    my $tag_seqno           = shift || 0;
+    my $tag_seqno           = shift ||  0;
     my $tag_seqno_in_sprite = shift || -1;
     return $self->_remove_tag($tag_seqno, $tag_seqno_in_sprite);
 }
 
-sub _load_data {
-    my $data = shift;
-    return ($data, length($data));
+sub _load {
+    my $input = shift;
+    if (ref($input) eq 'SCALAR') {
+        my $data = $$input;
+        return ($data, length $data);
+    }
+    open my $fh, $input or die "$!: $input";
+    my $data = do { local $/; <$fh> };
+    close $fh;
+    return ($data, length $data);
 }
 
 1;
@@ -192,11 +199,20 @@ SWFEditor - SWFEditor for Perl
 
 =head1 SYNOPSIS
 
-    use SWFEditor::Simple;
+    use SWFEditor;
 
-    my $swfed = SWFEditor::Simple->new();
+    # case: file path
+    my $swfed = SWFEditor->new();
     $swfed->input('resource/negimiku.swf');
     $swfed->replace_movie_clip('miku', 'resource/saitama3.swf');
+    print $swfed->output();
+
+    # case: binary data
+    my $data1 = do {local $/; <$fh>};
+    my $data2 = do {local $/; <$fh>};
+    my $swfed = SWFEditor->new();
+    $swfed->input(\$data1);
+    $swfed->replace_movie_clip('miku', \$data2);
     print $swfed->output();
 
 =head1 DESCRIPTION

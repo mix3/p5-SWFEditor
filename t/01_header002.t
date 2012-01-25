@@ -2,8 +2,6 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-my $d1 = get_file_contents('/resource/textvar.swf');
-
 my $expect = {
     compress => 1,
     version  => 5,
@@ -13,8 +11,22 @@ my $expect = {
     y_max    => 150,
 };
 
-my $swfed = SWFEditor->new();
 {
+    my $d1    = get_file_contents('/resource/textvar.swf');
+    my $swfed = SWFEditor->new();
+    $swfed->input(\$d1);
+    $swfed->set_header_info($expect);
+    my $got = $swfed->get_header_info();
+    is_deeply(
+        $got,
+        $expect,
+        '',
+    );
+}
+
+{
+    my $d1    = get_file_path('/resource/textvar.swf');
+    my $swfed = SWFEditor->new();
     $swfed->input($d1);
     $swfed->set_header_info($expect);
     my $got = $swfed->get_header_info();

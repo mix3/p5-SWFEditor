@@ -2,8 +2,6 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-my $d1 = get_file_contents('/resource/textvar.swf');
-
 my $expect = [
     {
         code    => 9,
@@ -52,8 +50,21 @@ my $expect = [
     },
 ];
 
-my $swfed = SWFEditor->new();
 {
+    my $d1    = get_file_contents('/resource/textvar.swf');
+    my $swfed = SWFEditor->new();
+    $swfed->input(\$d1);
+    my $got = $swfed->get_tag_list();
+    is_deeply(
+        $got,
+        $expect,
+        '',
+    );
+}
+
+{
+    my $d1    = get_file_path('/resource/textvar.swf');
+    my $swfed = SWFEditor->new();
     $swfed->input($d1);
     my $got = $swfed->get_tag_list();
     is_deeply(

@@ -22,15 +22,10 @@ sub import {
 
 sub get_file_contents {
     my $filepath = $FindBin::Bin.'/'.shift;
-    my $bytes = '';
-    my $fh;
-    open $fh, $filepath or die "$!: $filepath";
-    binmode($fh);
-    while (<$fh>) {
-        $bytes .= $_;
-    }
+    open my $fh, $filepath or die "$!: $filepath";
+    my $data = do { local $/; <$fh> };
     close $fh;
-    return $bytes;
+    return $data;
 }
 
 sub get_file_path {
