@@ -7,6 +7,7 @@
 #ifndef __SWF_ACTION_H__
 #define __SWF_ACTION_H__
 
+#include "bitstream.h"
 #include "y_keyvalue.h"
 
 typedef struct swf_action_ {

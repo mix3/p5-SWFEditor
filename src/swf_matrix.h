@@ -7,8 +7,6 @@
 #ifndef __SWF_MATRIX_H__
 #define __SWF_MATRIX_H__
 
-#include "swf_matrix.h"
-
 typedef struct swf_matrix_ {
     // char align;
     unsigned char has_scale:1;

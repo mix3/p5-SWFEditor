@@ -70,6 +70,9 @@ swf_cxformwithalpha_print(swf_cxformwithalpha_t *cx, int indent_depth) {
                cx->red_add_term, cx->green_add_term, cx->blue_add_term,
                cx->alpha_add_term);
     }
+    if ((cx->has_add_terms == 0) && (cx->has_mult_terms == 0)) {
+        printf("  (no add_terms or mult_terms)");
+    }
     printf("\n");
     return 0;
 }

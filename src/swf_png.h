@@ -11,7 +11,7 @@ extern void *
 pngconv_png2lossless(unsigned char *png_data, unsigned long png_data_len,
                      int *tag, int *format,
                      unsigned short *width, unsigned short *height,
-                     void **colormap, int *colormap_count);
+                     void **colormap, int *colormap_count, int rgb15);
 
 extern unsigned char *
 pngconv_lossless2png(void *image_data,

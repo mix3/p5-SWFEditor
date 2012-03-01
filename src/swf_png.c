@@ -87,7 +87,7 @@ void *
 pngconv_png2lossless(unsigned char *png_data, unsigned long png_data_len,
                      int *tag_no, int *format,
                      unsigned short *width, unsigned short *height,
-                     void **colormap, int *colormap_count) {
+                     void **colormap, int *colormap_count, int rgb15) {
     volatile png_structp png_ptr = NULL;
     volatile png_infop png_info_ptr = NULL;
     my_png_buffer png_buff;
@@ -145,6 +145,11 @@ pngconv_png2lossless(unsigned char *png_data, unsigned long png_data_len,
                  NULL, NULL, NULL);
     *width = (unsigned short) png_width;
     *height = (unsigned short) png_height;
+
+    if ((rgb15 > 0) && (color_type !=  PNG_COLOR_TYPE_RGB)) { // warning
+        fprintf(stderr, "rgb15 is %d but color_type is not PNG24\n", rgb15);
+    }
+
     switch(color_type) {
     case PNG_COLOR_TYPE_PALETTE:
         *format = 3;
@@ -157,7 +162,11 @@ pngconv_png2lossless(unsigned char *png_data, unsigned long png_data_len,
         }
         break;
     case PNG_COLOR_TYPE_RGB:
-        *format = 5;
+        if (rgb15 > 0) {
+            *format = 4;
+        } else {
+            *format = 5;
+        }
         *tag_no = 20; /* DefineBitsLossless */
         break;
     case PNG_COLOR_TYPE_RGB_ALPHA:

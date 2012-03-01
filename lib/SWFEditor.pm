@@ -50,9 +50,11 @@ sub replace_png_data {
     my $self     = shift;
     my $image_id = shift;
     my $data     = shift;
+    my $opts     = shift;
     return $self->_replace_png_data(
         $image_id,
         _load($data),
+        $opts,
     );
 }
 
@@ -93,12 +95,34 @@ sub replace_gif_data {
     );
 }
 
+sub replace_jpeg_data {
+    my $self       = shift;
+    my $image_id   = shift;
+    my $data       = shift;
+    my $alpha_data = shift;
+
+    my $alpha_data_len = 0;
+
+    if ($alpha_data) {
+        ($alpha_data, $alpha_data_len) = _load($alpha_data);
+    } else {
+        ($alpha_data, $alpha_data_len) = (0, 0);
+    }
+
+    return $self->_replace_jpeg_data(
+        $image_id,
+        _load($data),
+        $alpha_data,
+        $alpha_data_len,
+    );
+}
+
 sub replace_bitmap_data {
     my $self       = shift;
     my $image_cond = shift;
     my $data       = shift;
     my $alpha_data = shift;
-    my $without_converting = shift || 0;
+    my $opts       = shift;
 
     my $alpha_data_len = 0;
 
@@ -112,7 +136,7 @@ sub replace_bitmap_data {
         _load($data),
         $alpha_data,
         $alpha_data_len,
-        $without_converting,
+        $opts,
     );
 }
 

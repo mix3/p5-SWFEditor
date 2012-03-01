@@ -64,6 +64,9 @@ swf_cxform_print(swf_cxform_t *cx, int indent_depth) {
         printf("  AddTerm:%02x%02x%02x",
                cx->red_add_term, cx->green_add_term, cx->blue_add_term);
     }
+    if ((cx->has_add_terms == 0) && (cx->has_mult_terms == 0)) {
+        printf("  (no add_terms or mult_terms)");
+    }
     printf("\n");
     return 0;
 }

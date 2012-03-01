@@ -51,6 +51,7 @@ extern unsigned char *swf_tag_lossless_get_png_data(void *detail,
 extern int swf_tag_lossless_replace_png_data(void *detail, int image_id,
                                              unsigned char *png_data,
                                              unsigned long png_data_len,
+                                             int rgb15,
                                              swf_tag_t *tag);
 extern int swf_tag_lossless_replace_gif_data(void *detail, int image_id,
                                              unsigned char *gif_data,

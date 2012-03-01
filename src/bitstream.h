@@ -8,7 +8,6 @@
  *                     (C) 2008/03/09- yoya@awm.jp
  */
 
-
 #ifndef BITOPERATION_OPTIMIZE
 #define BITOPERATION_OPTIMIZE 0
 #endif
@@ -90,5 +89,23 @@ extern void bitstream_printerror(bitstream_t *bs);
 /* for debug */
 extern void bitstream_hexdump(bitstream_t *bs, int length);
 extern void bitstream_print(bitstream_t *bs);
+
+
+#ifdef BITSTREAM_DEBUG /* bitstream debug */
+
+extern void bitstream_debug_start(void);
+extern void bitstream_debug_end(void);
+
+#define bitstream_open()  bitstream_open_debug(__FILE__, __LINE__)
+#define bitstream_close(bs)  bitstream_close_debug(bs, __FILE__, __LINE__)
+extern bitstream_t *bitstream_open_debug(char *filename, int linenum);
+extern void bitstream_close_debug(bitstream_t *bs, char *filename, int linenum);
+
+#else // BITSTREAM_DEBUG
+
+#define bitstream_debug_start()
+#define bitstream_debug_end()
+
+#endif // BITSTREAM_DEBUG
 
 #endif /* __BITSTREAM_H__ */

@@ -17,6 +17,7 @@
 #include "swf_tag_sprite.h"
 #include "swf_tag_shape.h"
 #include "swf_tag_place.h"
+#include "swf_tag_button.h"
 #include "bitmap_util.h"
 
 swf_tag_info_t swf_tag_info_table[] = {
@@ -27,7 +28,7 @@ swf_tag_info_t swf_tag_info_table[] = {
     { 4, "PlaceObject", swf_tag_place_detail_handler },
     { 5, "RemoveObject", NULL},
     { 6, "DefineBitsJPEG", swf_tag_jpeg_detail_handler },
-    { 7, "DefineButton", NULL},
+    { 7, "DefineButton", swf_tag_button_detail_handler},
     { 8, "JPEGTables", swf_tag_jpegt_detail_handler },
     { 9, "SetBackgroundColor", NULL },
     { 10, "DefineFont", NULL},
@@ -48,7 +49,7 @@ swf_tag_info_t swf_tag_info_table[] = {
     { 28, "RemoveObject2", NULL },
     { 32, "DefineShape3", swf_tag_shape_detail_handler },
     { 33, "DefineText2", NULL },
-    { 34, "DefineButton2", NULL },
+    { 34, "DefineButton2", swf_tag_button_detail_handler },
     { 35, "DefineBitsJPEG3", swf_tag_jpeg3_detail_handler },
     { 36, "DefineBitsLossless2", swf_tag_lossless_detail_handler },
     { 37, "DefineEditText", swf_tag_edit_detail_handler },
@@ -684,7 +685,7 @@ swf_tag_get_png_data(swf_tag_t *tag, unsigned long *length, int image_id) {
 int
 swf_tag_replace_png_data(swf_tag_t *tag, int image_id,
                          unsigned char *png_data,
-                         unsigned long png_data_len) {
+                         unsigned long png_data_len, int rgb15) {
     swf_tag_info_t *tag_info = NULL;
     swf_tag_detail_handler_t *detail_handler = NULL;
     int result;
@@ -722,7 +723,8 @@ swf_tag_replace_png_data(swf_tag_t *tag, int image_id,
     }
     
     result= swf_tag_lossless_replace_png_data(tag->detail, image_id,
-                                              png_data, png_data_len, tag);
+                                              png_data, png_data_len,
+                                              rgb15, tag);
     if (result == 0) {
         free(tag->data);
         tag->data = NULL;

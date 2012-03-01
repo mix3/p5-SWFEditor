@@ -60,11 +60,18 @@ swf_tag_place_input_detail(swf_tag_t *tag, struct swf_object_ *swf) {
             bitstream_close(bs);
             return ret;
         }
-        ret = swf_cxform_parse(bs, &(swf_tag_place->color_transform));
-        if (ret) {
-            fprintf(stderr, "ERROR: swf_tag_place_input_detail: swf_tag_place->color_transform parse failed. character_id=%d\n", swf_tag_place->character_id);
-            bitstream_close(bs);
-            return ret;
+        bitstream_align(bs);
+        if (bitstream_getbytepos(bs) < length) { // optional
+            ret = swf_cxform_parse(bs, &(swf_tag_place->color_transform));
+            if (ret) {
+                fprintf(stderr, "ERROR: swf_tag_place_input_detail: swf_tag_place->color_transform parse failed. character_id=%d\n", swf_tag_place->character_id);
+                bitstream_close(bs);
+                return ret;
+            }
+        } else {
+            swf_tag_place->color_transform.has_add_terms = 0;
+            swf_tag_place->color_transform.has_mult_terms = 0;
+            swf_tag_place->color_transform.nbits = 0;
         }
     } else if (tag->code == 26) { // PlaceObject2
         swf_tag_place->flag_has_clip_action = bitstream_getbit(bs);
@@ -137,11 +144,14 @@ swf_tag_place_output_detail(swf_tag_t *tag, unsigned long *length,
             bitstream_close(bs);
             return NULL;
         }
-        ret = swf_cxform_build(bs, &(swf_tag_place->color_transform));
-        if (ret) {
-            fprintf(stderr, "ERROR: swf_tag_place_output_detail: swf_tag_place->color_transform build failed. character_id=%d\n", swf_tag_place->character_id);
-            bitstream_close(bs);
-            return NULL;
+        if (swf_tag_place->color_transform.has_add_terms ||
+            swf_tag_place->color_transform.has_mult_terms) { // optional
+            ret = swf_cxform_build(bs, &(swf_tag_place->color_transform));
+            if (ret) {
+                fprintf(stderr, "ERROR: swf_tag_place_output_detail: swf_tag_place->color_transform build failed. character_id=%d\n", swf_tag_place->character_id);
+                bitstream_close(bs);
+                return NULL;
+            }
         }
     } else if (tag->code == 26) { // PlaceObject2
         bitstream_putbit(bs, swf_tag_place->flag_has_clip_action);

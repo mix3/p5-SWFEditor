@@ -15,6 +15,7 @@
 #include "swf_tag_jpeg.h"
 #include "swf_tag_lossless.h"
 #include "swf_tag_shape.h"
+#include "swf_tag_button.h"
 #include "swf_tag_place.h"
 #include "swf_tag_sprite.h"
 #include "swf_action.h"
@@ -34,6 +35,10 @@ swf_object_open(void) {
 #ifdef MALLOC_DEBUG
     malloc_debug_start(); /* DEBUG XXX */
 #endif // MALLOC_DEBUG
+#ifdef BITSTREAM_DEBUG /* bitstream debug */
+    bitstream_debug_start();
+#endif // BITSTREAM_DEBUG
+
     swf = (swf_object_t *) calloc(sizeof(*swf), 1);
     swf->tag_head = NULL;
     swf->tag_tail = NULL;
@@ -64,6 +69,9 @@ swf_object_close(swf_object_t *swf) {
 #ifdef MALLOC_DEBUG
     malloc_debug_end(); /* DEBUG XXX */
 #endif // MALLOC_DEBUG
+#ifdef BITSTREAM_DEBUG /* bitstream debug */
+    bitstream_debug_end();
+#endif // BITSTREAM_DEBUG
     return ;
 }
 
@@ -294,6 +302,16 @@ swf_object_purge_contents(swf_object_t *swf) {
                     }
                     free(bitmap_id_list);
                 }
+            } else if (isButtonTag(tag->code)) {
+                int *character_id_list, character_id_list_num;
+                character_id_list = swf_tag_button_character_get_refcid_list(tag, &character_id_list_num);
+                if (character_id_list) {
+                    int i;
+                    for (i = 0 ; i < character_id_list_num; i++) {
+                        trans_table_set(refcid_trans_table, character_id_list[i], TRANS_TABLE_RESERVE_ID);
+                    }
+                    free(character_id_list);
+                }
             } else if (isSpriteTag(tag->code)) {
                 swf_tag_t *t;
                 swf_tag_sprite_detail_t *tag_sprite;
@@ -302,9 +320,21 @@ swf_object_purge_contents(swf_object_t *swf) {
                     fprintf(stderr, "swf_object_purge_contents: tag_sprite == NULL\n");
                 } else {
                     for (t = tag_sprite->tag ; t ; t = t->next) {
-                        int rid = swf_tag_get_refcid(t);
-                        if (rid > 0) {
-                            trans_table_set(refcid_trans_table, rid, TRANS_TABLE_RESERVE_ID);
+                        if (isButtonTag(tag->code)) {
+                            int *character_id_list, character_id_list_num;
+                            character_id_list = swf_tag_button_character_get_refcid_list(tag, &character_id_list_num);
+                            if (character_id_list) {
+                                int i;
+                                for (i = 0 ; i < character_id_list_num; i++) {
+                                    trans_table_set(refcid_trans_table, character_id_list[i], TRANS_TABLE_RESERVE_ID);
+                                }
+                                free(character_id_list);
+                            }
+                        } else {
+                            int rid = swf_tag_get_refcid(t);
+                            if (rid > 0) {
+                                trans_table_set(refcid_trans_table, rid, TRANS_TABLE_RESERVE_ID);
+                            }
                         }
                     }
                 }
@@ -930,7 +960,7 @@ swf_object_get_pngdata(swf_object_t *swf, unsigned long *length, int image_id) {
 int
 swf_object_replace_pngdata(swf_object_t *swf, int image_id,
                             unsigned char *png_data,
-                            unsigned long png_data_len) {
+                            unsigned long png_data_len, int rgb15) {
     int result = 1;
     swf_tag_t *tag;
     int old_width, old_height, new_width, new_height;
@@ -952,7 +982,7 @@ swf_object_replace_pngdata(swf_object_t *swf, int image_id,
         png_size(png_data, png_data_len, &new_width, &new_height);
     }
     result = swf_tag_replace_png_data(tag, image_id,
-                                      png_data, png_data_len);
+                                      png_data, png_data_len, rgb15);
     if (result) {
         fprintf(stderr, "swf_object_replace_pngdata: swf_tag_replace_png_data failed\n");
         return result;

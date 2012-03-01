@@ -368,6 +368,7 @@ swf_tag_shape_output_detail(swf_tag_t *tag, unsigned long *length,
     long offset_of_offset_morph = 0;
     long tmp_offset_byte = 0;
     long tmp_offset_bit = 0;
+    (void) swf;
     *length = 0;
     // build context
     swf_tag_shape->_current_fill_style_num = 0;

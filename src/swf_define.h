@@ -79,6 +79,8 @@ extern void print_hexbin(unsigned char *data, int data_len);
 #define isBitmapTag(tag) (isBitsJPEGTag(tag) || isBitsLosslessTag(tag))
 // DefineShape1,2,3, DefineMorphShape1
 #define isShapeTag(tag) (((tag) == 2) || ((tag) == 22) || ((tag) == 32) || ((tag) == 46))
+// DefineButton1,2
+#define isButtonTag(tag) (((tag) == 7) || ((tag) == 34))
 // PlaceObject1,2
 #define isPlaceTag(tag) (((tag) == 4) || ((tag) == 26))
 #define isSpriteTag(tag) ((tag) == 39)

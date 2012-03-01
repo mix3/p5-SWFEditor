@@ -11,6 +11,8 @@
 #include "src/jpeg_segment.c"
 #include "src/swf_action.c"
 #include "src/swf_argb.c"
+#include "src/swf_button_condaction.c"
+#include "src/swf_button_record.c"
 #include "src/swf_cxform.c"
 #include "src/swf_cxformwithalpha.c"
 #include "src/swf_fill_style.c"
@@ -41,6 +43,7 @@
 #include "src/swf_styles_count.c"
 #include "src/swf_tag.c"
 #include "src/swf_tag_action.c"
+#include "src/swf_tag_button.c"
 #include "src/swf_tag_edit.c"
 #include "src/swf_tag_jpeg.c"
 #include "src/swf_tag_lossless.c"
@@ -218,17 +221,34 @@ purge_useless_contents(swf)
         RETVAL
 
 int
-_replace_png_data(swf, image_id, data, data_len)
+_replace_png_data(swf, image_id, data, data_len, opts)
         swf_object_t *swf;
         int           image_id;
         char         *data;
         int           data_len;
+        SV           *opts;
     PREINIT: 
-        int           result = 1;
+        int           result =  1;
+        int           rgb15  = -1;
+        HV            *hv;
+        SV            *sv_rgb15;
+        HE            *he_rgb15;
     CODE:
+        if (SvROK(opts)) {
+            hv = (HV*)SvRV(opts);
+            if (SvTYPE(hv) != SVt_PVHV) {
+                croak("hashref expected");
+            }
+            sv_rgb15 = newSVpv("rgb15", 0);
+            he_rgb15 = hv_fetch_ent(hv, sv_rgb15, 0, 0);
+            if (he_rgb15) {
+                rgb15 = SvIV(HeVAL(he_rgb15));
+            }
+        }
         RETVAL = swf_object_replace_pngdata(swf, image_id,
                                                  (unsigned char *)data,
-                                                 (unsigned long) data_len);
+                                                 (unsigned long) data_len,
+                                                 rgb15);
         if (result) {
             RETVAL = 0;
         } else {
@@ -355,23 +375,25 @@ _replace_gif_data(swf, image_id, data, data_len)
         RETVAL
 
 int
-_replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len, without_converting)
+_replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len, opts)
         swf_object_t *swf;
         SV           *image_cond;
         char         *data;
         int           data_len;
         char         *alpha_data;
         int           alpha_data_len;
-        int           without_converting;
+        SV           *opts;
     PREINIT:
         int           image_id = 0;
         int           result   = 0;
         int           bitmap_format;
         int           width = -1, height = -1;
         int           red   = -1, green  = -1, blue = -1;
+        int           without_converting = 0;
+        int           rgb15 = -1;
         HV *hv;
-        SV *sv_width, *sv_height, *sv_red, *sv_green, *sv_blue;
-        HE *he_width, *he_height, *he_red, *he_green, *he_blue;
+        SV *sv_width, *sv_height, *sv_red, *sv_green, *sv_blue, *sv_rgb15, *sv_without_converting;
+        HE *he_width, *he_height, *he_red, *he_green, *he_blue, *he_rgb15, *he_without_converting;
     CODE:
         if (SvROK(image_cond)) {
             hv = (HV*)SvRV(image_cond);
@@ -407,6 +429,26 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
             }
         } else {
             image_id = SvIV(image_cond);
+        }
+
+        if (SvROK(opts)) {
+            hv = (HV*)SvRV(opts);
+            if (SvTYPE(hv) == SVt_PVHV) {
+                sv_rgb15 = newSVpv("rgb15", 0);
+                he_rgb15 = hv_fetch_ent(hv, sv_rgb15, 0, 0);
+                if (he_rgb15) {
+                    rgb15 = SvIV(HeVAL(he_rgb15));
+                }
+                sv_without_converting = newSVpv("rgb15", 0);
+                he_without_converting = hv_fetch_ent(hv, sv_without_converting, 0, 0);
+                if (he_without_converting) {
+                    without_converting = SvIV(HeVAL(he_without_converting));
+                }
+            } else if(SvTYPE(hv) == SVt_IV) {
+                if (0 < SvIV(opts)) {
+                    without_converting = 1;
+                }
+            }
         }
 
         if (image_id == 0) {
@@ -448,7 +490,8 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
             case BITMAP_UTIL_FORMAT_PNG:
                 result = swf_object_replace_pngdata(swf, image_id,
                                                     (unsigned char *)data,
-                                                    (unsigned long) data_len);
+                                                    (unsigned long) data_len,
+                                                    rgb15);
                 break;
             case BITMAP_UTIL_FORMAT_GIF:
                 result = swf_object_replace_gifdata(swf, image_id,
@@ -1148,5 +1191,30 @@ disasm_action_data(swf)
         }
         swf_action_list_destroy(action_list);
         RETVAL = 1;
+    OUTPUT:
+        RETVAL
+
+int
+_replace_jpeg_data(swf, image_id, data, data_len, alpha_data, alpha_data_len)
+        swf_object_t *swf;
+        int          image_id;
+        char         *data;
+        int           data_len;
+        char         *alpha_data;
+        int           alpha_data_len;
+    PREINIT:
+        int           result = 0;
+    CODE:
+        result = swf_object_replace_jpegdata(swf, image_id,
+                                             (unsigned char *)data,
+                                             (unsigned long) data_len,
+                                             (unsigned char *)alpha_data,
+                                             (unsigned long) alpha_data_len,
+                                             0);
+        if (result) {
+            RETVAL = 0;
+        } else {
+            RETVAL = 1;
+        }
     OUTPUT:
         RETVAL

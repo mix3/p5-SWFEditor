@@ -10,9 +10,100 @@
 
 static void bitstream_clear(bitstream_t *bs);
 
+
+#ifdef BITSTREAM_DEBUG /* bitstream debug */
+
+#undef bitstream_open
+#undef bitstream_close
+
+#define BITSTREAM_DEBUG_TABLE_NUM 0x40000
+
+static struct bitstream_debug_ {
+    void *ptr;
+    char *filename;
+    int  linenum;
+} bitstream_debug_table[BITSTREAM_DEBUG_TABLE_NUM];
+
+static int bitstream_debug_stack = 0;
+
+void
+bitstream_debug_start(void) {
+    int i;
+    bitstream_debug_stack ++;
+    if (bitstream_debug_stack > 1) {
+        fprintf(stderr, "bitstream_debug_start: bitstream_debug_stack=%d\n", bitstream_debug_stack);
+        return ;
+    }
+    for (i=0 ; i < BITSTREAM_DEBUG_TABLE_NUM ; i++) {
+        bitstream_debug_table[i].ptr = NULL;
+    }
+    fprintf(stderr, "bitstream_debug_start: 0/n=0/%d\n", BITSTREAM_DEBUG_TABLE_NUM);
+}
+
+void
+bitstream_debug_end(void) {
+    int i, j = 0;
+    bitstream_debug_stack --;
+    if (bitstream_debug_stack > 0) {
+        fprintf(stderr, "bitstream_debug_end: bitstream_debug_stack=%d\n", bitstream_debug_stack);
+        return ;
+    }
+    for (i=0 ; i < BITSTREAM_DEBUG_TABLE_NUM ; i++) {
+        if (bitstream_debug_table[i].ptr) {
+            fprintf(stderr, "XXX (%d) ptr=%p (%s, %d)\n",
+                    i, bitstream_debug_table[i].ptr,
+                    bitstream_debug_table[i].filename,
+                    bitstream_debug_table[i].linenum);
+            j = i + 1;
+        }
+    }
+    fprintf(stderr, "bitstream_debug_end: j/n=%d/%d\n", j, BITSTREAM_DEBUG_TABLE_NUM);
+}
+
+bitstream_t *
+bitstream_open_debug(char *filename, int linenum) {
+    int i;
+    void *ptr;
+    ptr = bitstream_open();
+    for (i=0 ; i < BITSTREAM_DEBUG_TABLE_NUM ; i++) {
+        if (bitstream_debug_table[i].ptr == NULL) {
+            bitstream_debug_table[i].ptr = ptr;
+            bitstream_debug_table[i].filename = filename;
+            bitstream_debug_table[i].linenum = linenum;
+            break;
+        }
+    }
+    return ptr;
+}
+
+void
+bitstream_close_debug(bitstream_t * bs,  char *filename, int linenum) {
+    int i;
+    void *ptr = bs;
+//    fprintf(stderr, "free_debug: ptr=%p (%s,%d)\n", ptr, filename, linenum);
+    for (i=0 ; i < BITSTREAM_DEBUG_TABLE_NUM ; i++) {
+        if (bitstream_debug_table[i].ptr == ptr) {
+            bitstream_debug_table[i].ptr = NULL;
+            break;
+        }
+    }
+    if (i == BITSTREAM_DEBUG_TABLE_NUM) {
+        char *p;
+        fprintf(stderr, "free non-allocated memory: ptr=%p (%s,%d)\n", ptr,
+                filename, linenum);
+        bitstream_debug_end();
+        p = ptr;
+        p = 0;
+    }
+    bitstream_close(bs);
+}
+
+#endif // BITSTREAM_DEBUG
+
 bitstream_t *
 bitstream_open(void) {
     bitstream_t *bs = (bitstream_t *) calloc(sizeof(*bs), 1);
+
     bs->data = NULL;
     bs->data_len = 0;
     bs->data_alloc_len = 0;
@@ -401,7 +492,7 @@ bitstream_incrpos(bitstream_t *bs, signed long byte_incr,
 int
 bitstream_setpos(bitstream_t *bs, unsigned long byte_offset,
 		     unsigned long bit_offset) {
-    if (bs->data_len <= byte_offset ) {
+    if (bs->data_len < byte_offset ) {
         fprintf(stderr, "bitstream_setpos: bs->data_len(%lu) <= byte_offset(%lu)\n",
                 bs->data_len, byte_offset);
     }
