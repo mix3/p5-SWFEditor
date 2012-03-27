@@ -130,19 +130,14 @@ swf_object_input(swf_object_t *swf, unsigned char *data,
     prev_tag = NULL;
     while(1) {
         long pos;
+        bitstream_align(bs);
         pos = bitstream_getbytepos(bs);
         if ((pos == -1) || ((long) swf->header.file_length <= pos)) {
             break;
         }
         tag = swf_tag_create(bs);
         if (tag == NULL) {
-            swf_tag_t *next_tag;
-            for (tag = swf->tag_head ; tag ; tag = next_tag) {
-                next_tag = tag->next;
-                swf_tag_destroy(tag);
-            }
-            bitstream_close(bs);
-            return 1; // FAILURE
+            break; // finish (no end tag in _root)
         }
         if (prev_tag == NULL) {
             swf->tag_head = tag;
@@ -1553,8 +1548,10 @@ swf_object_replace_movieclip(swf_object_t *swf,
             }
             // extract tag before SpriteTag
             prev_sprite_tag->next = swf_tag_move(tag);
+            prev_sprite_tag->next->prev = prev_sprite_tag;
             prev_sprite_tag = prev_sprite_tag->next;
             prev_sprite_tag->next = sprite_tag;
+            sprite_tag->prev = prev_sprite_tag;
             break;
             // Control Tag
           case 0: // End
