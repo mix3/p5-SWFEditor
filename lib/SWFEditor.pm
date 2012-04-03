@@ -346,7 +346,7 @@ Implemented function list
 
 =item $swfed->get_png_data(int $image_id)
 
-=item $swfed->replace_bitmap_data(hashref \%image_cond | $image_id, string $bitmapdata, string $alphadata = undef, boolean $without_converting = 0)
+=item $swfed->replace_bitmap_data(hashref \%image_cond | $image_id, string $bitmapdata, string $alphadata = undef, \%opts)
 
 =item $swfed->replace_png_data($image_id, $pngdata)
 
@@ -405,6 +405,10 @@ Implemented function list
 =head1 SEE ALSO
 
 SWF Editor for PHP: L<http://sourceforge.jp/projects/swfed/>
+
+=head1 RESOURCES
+
+REPOSITORY: L<https://github.com/mix3/p5-SWFEditor/>
 
 =head1 AUTHOR
 
