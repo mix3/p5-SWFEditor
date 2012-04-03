@@ -4,7 +4,8 @@ use 5.008;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION       = '0.01';
+our $SWFED_VERSION = '0.56';
 
 require XSLoader;
 XSLoader::load('SWFEditor', $VERSION);
