@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('replace_movie_clip and purge');
+
 my $expect = get_file_contents('/swf/movieclip002.swf');
 
 {
@@ -12,11 +14,7 @@ my $expect = get_file_contents('/swf/movieclip002.swf');
     $swfed->replace_movie_clip('miku', \$d2);
     $swfed->purge_useless_contents();
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        'movieclip002.phpt'
-    );
+    is ($got, $expect, 'movieclip002.phpt');
 }
 
 {
@@ -27,11 +25,7 @@ my $expect = get_file_contents('/swf/movieclip002.swf');
     $swfed->replace_movie_clip('miku', $d2);
     $swfed->purge_useless_contents();
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        'movieclip002.phpt'
-    );
+    is ($got, $expect, 'movieclip002.phpt');
 }
 
 done_testing();

@@ -2,34 +2,24 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-my $expect = get_file_contents('/swf/bitmap001.swf');
+note('get_bitmap_size JPG');
 
 {
-    my $d1    = get_file_contents('/resource/colorformat.swf');
-    my $d2    = get_file_contents('/resource/inasahama.gif');
+    my $d1    = get_file_contents('/resource/saitama.swf');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
-    $swfed->replace_bitmap_data(1, \$d2);
-    my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        ''
-    );
+    my $got = $swfed->get_bitmap_size(1);
+    is ($got->{width},  108, 'bitmap001.phpt');
+    is ($got->{height},  80, 'bitmap001.phpt');
 }
 
 {
-    my $d1    = get_file_path('/resource/colorformat.swf');
-    my $d2    = get_file_path('/resource/inasahama.gif');
+    my $d1    = get_file_path('/resource/saitama.swf');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
-    $swfed->replace_bitmap_data(1, $d2);
-    my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        ''
-    );
+    my $got = $swfed->get_bitmap_size(1);
+    is ($got->{width},  108, 'bitmap001.phpt');
+    is ($got->{height},  80, 'bitmap001.phpt');
 }
 
 done_testing();

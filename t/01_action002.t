@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('set_action_variables() : create doaction');
+
 my $expect = get_file_contents('/swf/action002.swf');
 
 {
@@ -12,11 +14,7 @@ my $expect = get_file_contents('/swf/action002.swf');
         testvar => 'dummydummy',
     });
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        'action002.phpt'
-    );
+    is ($got, $expect, 'action002.phpt');
 }
 
 {
@@ -27,11 +25,7 @@ my $expect = get_file_contents('/swf/action002.swf');
         testvar => 'dummydummy',
     });
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        'action002.phpt'
-    );
+    is ($got, $expect, 'action002.phpt');
 }
 
 done_testing();

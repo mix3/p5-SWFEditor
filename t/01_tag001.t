@@ -2,76 +2,28 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-my $expect = [
-    {
-        code    => 9,
-        tag     => 9,
-        tagName => 'SetBackgroundColor',
-        length  => 3,
-    },
-    {
-        code    => 12,
-        tag     => 12,
-        tagName => 'DoAction',
-        length  => 28,
-        detail  => 1,
-    },
-    {
-        code    => 48,
-        tag     => 48,
-        tagName => 'DefineFont2',
-        length  => 25,
-    },
-    {
-        code    => 37,
-        tag     => 37,
-        tagName => 'DefineEditText',
-        length  => 45,
-        detail  => 1,
-    },
-    {
-        code    => 26,
-        tag     => 26,
-        tagName => 'PlaceObject2',
-        length  => 9,
-        detail  => 1,
-    },
-    {
-        code    => 1,
-        tag     => 1,
-        tagName => 'ShowFrame',
-        length  => 0,
-    },
-    {
-        code    => 0,
-        tag     => 0,
-        tagName => 'End',
-        length  => 0,
-    },
-];
+note('replace_tag_data');
+
+my $expect = get_file_contents('/swf/tag001.swf');
 
 {
-    my $d1    = get_file_contents('/resource/textvar.swf');
+    my $d1    = get_file_contents('/resource/negimiku.swf');
+    my $d2    = get_file_contents('/resource/saitama-3.bits');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
-    my $got = $swfed->get_tag_list();
-    is_deeply(
-        $got,
-        $expect,
-        '',
-    );
+    $swfed->replace_tag_data(2, \$d2);
+    my $got = $swfed->output();
+    is ($got, $expect, 'tag001.phpt');
 }
 
 {
-    my $d1    = get_file_path('/resource/textvar.swf');
+    my $d1    = get_file_path('/resource/negimiku.swf');
+    my $d2    = get_file_path('/resource/saitama-3.bits');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
-    my $got = $swfed->get_tag_list();
-    is_deeply(
-        $got,
-        $expect,
-        '',
-    );
+    $swfed->replace_tag_data(2, $d2);
+    my $got = $swfed->output();
+    is ($got, $expect, 'tag001.phpt');
 }
 
 done_testing();

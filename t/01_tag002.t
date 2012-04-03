@@ -2,59 +2,28 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-my $expect = [
-    undef,
-    {
-        action_list_count => 5,
-    },
-    undef,
-    {
-        edit_id => 2,
-        variable_name => 'textvar',
-        initial_text => 'ABCDEFG',
-    },
-    {
-        character_id => 2,
-        depth        => 1,
-    },
-    undef,
-    undef,
-];
+note('replace_tag_data_by_cid');
+
+my $expect = get_file_contents('/swf/tag002.swf');
 
 {
-    my $d1    = get_file_contents('/resource/textvar.swf');
+    my $d1    = get_file_contents('/resource/negimiku.swf');
+    my $d2    = get_file_contents('/resource/saitama-3.bits');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
-    my $index = 0;
-    for my $tag (@{$swfed->get_tag_list()}) {
-        if ($tag->{detail}) {
-            my $got = $swfed->get_tag_detail($index);
-            is_deeply(
-                $got,
-                $expect->[$index],
-                '',
-            );
-        }
-        $index++;
-    }
+    $swfed->replace_tag_data_by_cid(3, \$d2);
+    my $got = $swfed->output();
+    is ($got, $expect, 'tag002.phpt');
 }
 
 {
-    my $d1    = get_file_path('/resource/textvar.swf');
+    my $d1    = get_file_path('/resource/negimiku.swf');
+    my $d2    = get_file_path('/resource/saitama-3.bits');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
-    my $index = 0;
-    for my $tag (@{$swfed->get_tag_list()}) {
-        if ($tag->{detail}) {
-            my $got = $swfed->get_tag_detail($index);
-            is_deeply(
-                $got,
-                $expect->[$index],
-                '',
-            );
-        }
-        $index++;
-    }
+    $swfed->replace_tag_data_by_cid(3, $d2);
+    my $got = $swfed->output();
+    is ($got, $expect, 'tag002.phpt');
 }
 
 done_testing();

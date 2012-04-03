@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('replace_movie_clip 300 defineshape & placeobject');
+
 my $expect = get_file_contents('/swf/movieclip004.swf');
 
 {
@@ -11,11 +13,7 @@ my $expect = get_file_contents('/swf/movieclip004.swf');
     $swfed->input(\$d1);
     $swfed->replace_movie_clip('miku', \$d2);
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        'movieclip004.phpt'
-    );
+    is ($got, $expect, 'movieclip004.phpt');
 }
 
 {
@@ -25,11 +23,7 @@ my $expect = get_file_contents('/swf/movieclip004.swf');
     $swfed->input($d1);
     $swfed->replace_movie_clip('miku', $d2);
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        'movieclip004.phpt'
-    );
+    is ($got, $expect, 'movieclip004.phpt');
 }
 
 done_testing();

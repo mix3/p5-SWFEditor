@@ -2,30 +2,19 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-my $expect = get_file_contents('/alpha/negimiku.alpha.3');
+note('replace_jpeg_data test with surplus data at tail');
+
+my $expect = get_file_contents('/swf/jpeg002.swf');
 
 {
-    my $d1    = get_file_contents('/resource/negimiku.swf');
+    my $d1    = get_file_contents('/resource/saitama.swf');
+    my $d2    = get_file_contents('/resource/5.jpg').'ILOVEYOU';
     my $swfed = SWFEditor->new();
+    $swfed->set_shape_adjust_mode_rect_resize();
     $swfed->input(\$d1);
-    my $got = $swfed->get_jpeg_alpha(3);
-    is (
-        $got,
-        $expect,
-        ''
-    );
-}
-
-{
-    my $d1    = get_file_path('/resource/negimiku.swf');
-    my $swfed = SWFEditor->new();
-    $swfed->input($d1);
-    my $got = $swfed->get_jpeg_alpha(3);
-    is (
-        $got,
-        $expect,
-        ''
-    );
+    $swfed->replace_jpeg_data(1, \$d2);
+    my $got = $swfed->output();
+    is ($got, $expect, 'jpeg001.phpt');
 }
 
 done_testing();
