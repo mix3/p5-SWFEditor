@@ -3,7 +3,7 @@ use Test::More;
 
 note('swf_info() test');
 
-my $swfinfo = <<"EXPECT";
+my $expect = <<"EXPECT";
 magic=FWS  version=4  file_length=2704
  rect=(0, 0)-(240, 240) (f_size=14)
 frame_rate=8.0  frame_count=40
@@ -264,7 +264,7 @@ frame_rate=8.0  frame_count=40
 [84] tag=End(0)
 EXPECT
 
-my $expect = $swfinfo.$swfinfo;
+#my $expect = $swfinfo.$swfinfo;
 
 tests {
     my $got = `perl -I lib/ t/01_swfinfo001.pl`;
