@@ -515,9 +515,16 @@ swf_tag_get_bitmap_color1stpixel(swf_tag_t *tag,
             *blue  = swf_tag_lossless->colormap[color_index].blue;
         } else { // Lossless2 => RGBA
             int alpha = swf_tag_lossless->colormap2[color_index].alpha;
-            *red   = swf_tag_lossless->colormap2[color_index].red * 255 / alpha;
-            *green = swf_tag_lossless->colormap2[color_index].green * 255 / alpha;
-            *blue  = swf_tag_lossless->colormap2[color_index].blue * 255 / alpha;
+            if (alpha == 0) {
+                *red   = swf_tag_lossless->colormap2[color_index].red;
+                *green = swf_tag_lossless->colormap2[color_index].green;
+                *blue  = swf_tag_lossless->colormap2[color_index].blue;
+            }
+            else {
+                *red   = swf_tag_lossless->colormap2[color_index].red * 255 / alpha;
+                *green = swf_tag_lossless->colormap2[color_index].green * 255 / alpha;
+                *blue  = swf_tag_lossless->colormap2[color_index].blue * 255 / alpha;
+            }
         }
         break;
     case 5:
@@ -527,9 +534,16 @@ swf_tag_get_bitmap_color1stpixel(swf_tag_t *tag,
             *blue  = swf_tag_lossless->bitmap[0].blue;
         } else { // Lossless2 => ARGB
             int alpha = swf_tag_lossless->bitmap2[0].alpha;
-            *red   = swf_tag_lossless->bitmap2[0].red * 255 / alpha;
-            *green = swf_tag_lossless->bitmap2[0].green * 255 / alpha;
-            *blue  = swf_tag_lossless->bitmap2[0].blue * 255 / alpha;
+            if (alpha == 0) {
+                *red   = swf_tag_lossless->bitmap2[0].red;
+                *green = swf_tag_lossless->bitmap2[0].green;
+                *blue  = swf_tag_lossless->bitmap2[0].blue;
+            }
+            else {
+                *red   = swf_tag_lossless->bitmap2[0].red * 255 / alpha;
+                *green = swf_tag_lossless->bitmap2[0].green * 255 / alpha;
+                *blue  = swf_tag_lossless->bitmap2[0].blue * 255 / alpha;
+            }
         }
         break;
     default: // include 4 (15bit color)
