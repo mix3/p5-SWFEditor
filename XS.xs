@@ -63,7 +63,6 @@ _swf_object_open(sv)
     PREINIT:
         swf_object_t *swf;
     CODE:
-        Newx(swf, sizeof(swf_object_t), swf_object_t);
         swf = swf_object_open();
         sv_magic(SvRV(sv), NULL, PERL_MAGIC_ext, NULL, 0);
         mg_find(SvRV(sv), PERL_MAGIC_ext)->mg_obj = (void *) swf;
@@ -74,7 +73,6 @@ _swf_object_close(swf)
     CODE:
         if (swf) {
             swf_object_close(swf);
-            Safefree(swf);
         }
 
 int
