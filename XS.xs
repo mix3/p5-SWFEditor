@@ -513,7 +513,7 @@ get_tag_list(swf)
         swf_object_t   *swf;
     PREINIT:
         int             i        = 0;
-        AV*             data     = newAV();
+        AV*             data     = (AV*)sv_2mortal((SV*)newAV());
         swf_tag_t      *tag      = NULL;
         swf_tag_info_t *tag_info = NULL;
     CODE:
