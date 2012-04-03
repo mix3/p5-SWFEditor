@@ -439,7 +439,7 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
                 if (he_rgb15) {
                     rgb15 = SvIV(HeVAL(he_rgb15));
                 }
-                sv_without_converting = newSVpv("rgb15", 0);
+                sv_without_converting = newSVpv("without_converting", 0);
                 he_without_converting = hv_fetch_ent(hv, sv_without_converting, 0, 0);
                 if (he_without_converting) {
                     without_converting = SvIV(HeVAL(he_without_converting));
@@ -982,6 +982,7 @@ get_bitmap_size(swf, bitmap_id)
         if (ret) {
             croak("get_bitmap_size: error");
         }
+        data = (HV *)sv_2mortal((SV *)newHV());
         hv_store(data, "width",  5, newSVuv(width),  0);
         hv_store(data, "height", 6, newSVuv(height), 0);
         RETVAL = newRV_inc((SV *)data);
