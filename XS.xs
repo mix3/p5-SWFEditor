@@ -399,11 +399,11 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
                 croak("hashref expected");
             }
 
-            sv_width  = newSVpv("width",  0);
-            sv_height = newSVpv("height", 0);
-            sv_red    = newSVpv("red",    0);
-            sv_green  = newSVpv("green",  0);
-            sv_blue   = newSVpv("blue",   0);
+            sv_width  = sv_2mortal(newSVpv("width",  0));
+            sv_height = sv_2mortal(newSVpv("height", 0));
+            sv_red    = sv_2mortal(newSVpv("red",    0));
+            sv_green  = sv_2mortal(newSVpv("green",  0));
+            sv_blue   = sv_2mortal(newSVpv("blue",   0));
 
             he_width = hv_fetch_ent(hv, sv_width, 0, 0);
             if (he_width) {
