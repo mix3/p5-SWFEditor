@@ -1078,7 +1078,7 @@ get_shape_id_list_by_bitmap_ref(swf, bitmap_id)
         int             bitmap_id;
     PREINIT:
         int             i        = 0;
-        AV*             data     = newAV();
+        AV*             data     = (AV*)sv_2mortal((SV*)newAV());
         swf_tag_t      *tag      = NULL;
         swf_tag_info_t *tag_info = NULL;
         int *bitmap_id_list, bitmap_id_list_num;

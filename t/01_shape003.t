@@ -4,7 +4,7 @@ use SWFEditor;
 
 my $expect = { 1 => [2], 3 => [4], 5 => [6] };
 
-{
+tests {
     my $d1    = get_file_contents('/resource/negimiku.swf');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
@@ -16,9 +16,9 @@ my $expect = { 1 => [2], 3 => [4], 5 => [6] };
             ''
         );
     }
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/negimiku.swf');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
@@ -30,6 +30,6 @@ my $expect = { 1 => [2], 3 => [4], 5 => [6] };
             ''
         );
     }
-}
+};
 
 done_testing();
