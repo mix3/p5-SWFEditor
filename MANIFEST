@@ -111,6 +111,7 @@ t/01_bitmap001.t
 t/01_bitmap002.t
 t/01_bitmap003.t
 t/01_bitmap004.t
+t/01_bitmap005.t
 t/01_convert001.t
 t/01_edit001.t
 t/01_edit002.t
@@ -146,6 +147,7 @@ t/alpha/negimiku.alpha.3
 t/resource/4color-300.swf
 t/resource/5.jpg
 t/resource/colorformat.swf
+t/resource/colorformat_trans.swf
 t/resource/inasahama.gif
 t/resource/negimiku.swf
 t/resource/negimiku001.png
@@ -164,6 +166,7 @@ t/swf/bitmap001.swf
 t/swf/bitmap002.swf
 t/swf/bitmap003.swf
 t/swf/bitmap004.swf
+t/swf/bitmap005.swf
 t/swf/convert001.swf
 t/swf/edit001.swf
 t/swf/gif001.swf
