@@ -4,7 +4,7 @@ use SWFEditor;
 
 note('is_bitmap_tag()');
 
-{
+tests {
     my $d1    = get_file_contents('/resource/saitama.swf');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
@@ -19,9 +19,9 @@ note('is_bitmap_tag()');
             is($got->{detail},  1,                't/01_isbitmaptag001.t');
         }
     }
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/saitama.swf');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
@@ -36,6 +36,6 @@ note('is_bitmap_tag()');
             is($got->{detail},  1,                't/01_isbitmaptag001.t');
         }
     }
-}
+};
 
 done_testing();

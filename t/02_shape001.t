@@ -4,7 +4,7 @@ use SWFEditor;
 
 my $expect = get_file_contents('/shape/colorformat.shape.8');
 
-{
+tests {
     my $d1    = get_file_contents('/resource/colorformat.swf');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
@@ -14,9 +14,9 @@ my $expect = get_file_contents('/shape/colorformat.shape.8');
         $expect,
         ''
     );
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/colorformat.swf');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
@@ -26,6 +26,6 @@ my $expect = get_file_contents('/shape/colorformat.shape.8');
         $expect,
         ''
     );
-}
+};
 
 done_testing();

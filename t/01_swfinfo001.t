@@ -266,9 +266,9 @@ EXPECT
 
 my $expect = $swfinfo.$swfinfo;
 
-{
+tests {
     my $got = `perl -I lib/ t/01_swfinfo001.pl`;
     is($got, $expect, 'swfinfo001.phpt');
-}
+};
 
 done_testing();

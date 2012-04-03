@@ -15,7 +15,7 @@ tests {
     });
     my $got = $swfed->output();
     is ($got, $expect, 'action001.phpt');
-}
+};
 
 tests {
     my $d1    = get_file_path('/resource/textvar.swf');
@@ -26,6 +26,6 @@ tests {
     });
     my $got = $swfed->output();
     is ($got, $expect, 'action001.phpt');
-}
+};
 
 done_testing();

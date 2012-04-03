@@ -21,7 +21,7 @@ my $expect = [
     undef,
 ];
 
-{
+tests {
     my $d1    = get_file_contents('/resource/textvar.swf');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
@@ -37,9 +37,9 @@ my $expect = [
         }
         $index++;
     }
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/textvar.swf');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
@@ -55,6 +55,6 @@ my $expect = [
         }
         $index++;
     }
-}
+};
 
 done_testing();

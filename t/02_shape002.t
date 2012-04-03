@@ -4,7 +4,7 @@ use SWFEditor;
 
 my $expect = get_file_contents('/swf/shape002.swf');
 
-{
+tests {
     my $d1    = get_file_contents('/resource/negimiku.swf');
     my $d2    = get_file_contents('/shape/colorformat.shape.8');
     my $swfed = SWFEditor->new();
@@ -16,9 +16,9 @@ my $expect = get_file_contents('/swf/shape002.swf');
         $expect,
         ''
     );
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/negimiku.swf');
     my $d2    = get_file_path('/shape/colorformat.shape.8');
     my $swfed = SWFEditor->new();
@@ -30,6 +30,6 @@ my $expect = get_file_contents('/swf/shape002.swf');
         $expect,
         ''
     );
-}
+};
 
 done_testing();

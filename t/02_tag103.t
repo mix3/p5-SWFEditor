@@ -2,7 +2,7 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
-{
+tests {
     my $d1    = get_file_contents('/resource/textvar.swf');
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
@@ -17,9 +17,9 @@ use SWFEditor;
         );
         $seqno++;
     }
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/textvar.swf');
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
@@ -34,6 +34,6 @@ use SWFEditor;
         );
         $seqno++;
     }
-}
+};
 
 done_testing();

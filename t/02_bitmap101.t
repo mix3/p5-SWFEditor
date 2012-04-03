@@ -4,7 +4,7 @@ use SWFEditor;
 
 my $expect = get_file_contents('/swf/bitmap101.swf');
 
-{
+tests {
     my $d1    = get_file_contents('/resource/colorformat.swf');
     my $d2    = get_file_contents('/resource/inasahama.gif');
     my $swfed = SWFEditor->new();
@@ -16,9 +16,9 @@ my $expect = get_file_contents('/swf/bitmap101.swf');
         $expect,
         ''
     );
-}
+};
 
-{
+tests {
     my $d1    = get_file_path('/resource/colorformat.swf');
     my $d2    = get_file_path('/resource/inasahama.gif');
     my $swfed = SWFEditor->new();
@@ -30,6 +30,6 @@ my $expect = get_file_contents('/swf/bitmap101.swf');
         $expect,
         ''
     );
-}
+};
 
 done_testing();
