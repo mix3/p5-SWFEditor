@@ -1,15 +1,40 @@
 use 5.008;
 use ExtUtils::MakeMaker;
+use Devel::CheckLib;
+
+check_lib_or_exit( lib => ['z', 'png', 'gif'] );
 
 my (@INC,@LIBPATH,@LIBS);
-@INC     = qw(-I. -I/usr/local/include -I/usr/include ) unless @INC;
-@LIBPATH = qw(-L/usr/local/lib -L/usr/lib) unless @LIBPATH;
-@LIBS    = qw(-lz -lpng -lgif) unless @LIBS;
+
+@INC = qw(
+    -I.
+    -I/usr/local/include
+    -I/usr/include
+) unless @INC;
+
+@LIBPATH = qw(
+    -L/usr/lib/X11
+    -L/usr/X11R6/lib
+    -L/usr/X11/lib
+    -L/usr/local/lib
+    -L/usr/lib
+) unless @LIBPATH;
+
+@LIBS = qw(
+    -lz
+    -lpng
+    -lgif
+) unless @LIBS;
 
 # support for AMD64 libraries
 if (-d '/usr/lib64') {
     my @libs64 = map {my $a = $_; $a=~ s/lib$/lib64/; $a} @LIBPATH;
     @LIBPATH = (@LIBPATH,@libs64);
+}
+
+for (@ARGV) {
+    push @INC,     $_ if($_ =~ /^-I/);
+    push @LIBPATH, $_ if($_ =~ /^-L/);
 }
 
 my $DEFINES = ' -DHAVE_PNG -DHAVE_GIF';
