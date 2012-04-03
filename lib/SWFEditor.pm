@@ -19,7 +19,7 @@ sub new {
     return $self;
 }
 
-sub DESTORY {
+sub DESTROY {
     my $self = shift;
     _swf_object_close($self);
 }

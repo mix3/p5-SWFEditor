@@ -63,7 +63,6 @@ _swf_object_open(sv)
     PREINIT:
         swf_object_t *swf;
     CODE:
-        Newx(swf, sizeof(swf_object_t), swf_object_t);
         swf = swf_object_open();
         sv_magic(SvRV(sv), NULL, PERL_MAGIC_ext, NULL, 0);
         mg_find(SvRV(sv), PERL_MAGIC_ext)->mg_obj = (void *) swf;
@@ -74,7 +73,6 @@ _swf_object_close(swf)
     CODE:
         if (swf) {
             swf_object_close(swf);
-            Safefree(swf);
         }
 
 int
@@ -401,11 +399,11 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
                 croak("hashref expected");
             }
 
-            sv_width  = newSVpv("width",  0);
-            sv_height = newSVpv("height", 0);
-            sv_red    = newSVpv("red",    0);
-            sv_green  = newSVpv("green",  0);
-            sv_blue   = newSVpv("blue",   0);
+            sv_width  = sv_2mortal(newSVpv("width",  0));
+            sv_height = sv_2mortal(newSVpv("height", 0));
+            sv_red    = sv_2mortal(newSVpv("red",    0));
+            sv_green  = sv_2mortal(newSVpv("green",  0));
+            sv_blue   = sv_2mortal(newSVpv("blue",   0));
 
             he_width = hv_fetch_ent(hv, sv_width, 0, 0);
             if (he_width) {
@@ -515,7 +513,7 @@ get_tag_list(swf)
         swf_object_t   *swf;
     PREINIT:
         int             i        = 0;
-        AV*             data     = newAV();
+        AV*             data     = (AV*)sv_2mortal((SV*)newAV());
         swf_tag_t      *tag      = NULL;
         swf_tag_info_t *tag_info = NULL;
     CODE:
@@ -1081,7 +1079,7 @@ get_shape_id_list_by_bitmap_ref(swf, bitmap_id)
         int             bitmap_id;
     PREINIT:
         int             i        = 0;
-        AV*             data     = newAV();
+        AV*             data     = (AV*)sv_2mortal((SV*)newAV());
         swf_tag_t      *tag      = NULL;
         swf_tag_info_t *tag_info = NULL;
         int *bitmap_id_list, bitmap_id_list_num;
