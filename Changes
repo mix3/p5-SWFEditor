@@ -1,0 +1,13 @@
+Revision history for Perl extension SWFEditor
+
+0.02
+    2012-04-06
+        - fix pod
+        - fix get_bitmap_size bug
+        - fix some memory leak (thanks typestar)
+        - update SWFED_VERSION from 0.55 to 0.56
+        - add test
+
+0.01
+    2012-03-28
+        - initial release
