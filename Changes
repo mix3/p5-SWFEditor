@@ -2,6 +2,7 @@ Revision history for Perl extension SWFEditor
 
 0.02_01
     2012-04-06
+        - add MANIFEST.SKIP
         - fix MANIFEST
 
 0.02

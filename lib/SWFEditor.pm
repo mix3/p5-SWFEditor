@@ -4,7 +4,7 @@ use 5.008;
 use strict;
 use warnings;
 
-our $VERSION       = '0.02_01';
+our $VERSION       = '0.03';
 our $SWFED_VERSION = '0.56';
 
 require XSLoader;
