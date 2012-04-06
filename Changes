@@ -1,5 +1,9 @@
 Revision history for Perl extension SWFEditor
 
+0.02_01
+    2012-04-06
+        - fix MANIFEST
+
 0.02
     2012-04-06
         - fix pod
