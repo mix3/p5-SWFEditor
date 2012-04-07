@@ -346,7 +346,7 @@ Implemented function list
 
 =item $swfed->get_png_data(int $image_id)
 
-=item $swfed->replace_bitmap_data(hashref \%image_cond | $image_id, string $bitmapdata, string $alphadata = undef, \%opts)
+=item $swfed->replace_bitmap_data(hashref \%image_cond | $image_id, string $bitmapdata, string $alphadata = undef, hashref \%opts | int $without_converting)
 
 =item $swfed->replace_png_data($image_id, $pngdata)
 
