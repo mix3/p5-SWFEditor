@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('replace_png_data(): test');
+
 my $expect = get_file_contents('/swf/png002.swf');
 
 tests {

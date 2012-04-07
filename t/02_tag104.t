@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('get_tag_data_by_cid(): test');
+
 my $expect = get_file_contents('/tag/textvar.tag.cid.1');
 
 tests {
@@ -9,11 +11,7 @@ tests {
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
     my $got = $swfed->get_tag_data_by_cid(1);
-    is (
-        $got,
-        $expect,
-        '',
-    );
+    is ($got, $expect, '');
 };
 
 tests {
@@ -21,11 +19,7 @@ tests {
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
     my $got = $swfed->get_tag_data_by_cid(1);
-    is (
-        $got,
-        $expect,
-        '',
-    );
+    is ($got, $expect, '');
 };
 
 done_testing();

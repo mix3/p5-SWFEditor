@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('get_tag_detail(): test');
+
 my $expect = [
     undef,
     {
@@ -29,11 +31,7 @@ tests {
     for my $tag (@{$swfed->get_tag_list()}) {
         if ($tag->{detail}) {
             my $got = $swfed->get_tag_detail($index);
-            is_deeply(
-                $got,
-                $expect->[$index],
-                '',
-            );
+            is_deeply($got, $expect->[$index], '');
         }
         $index++;
     }
@@ -47,11 +45,7 @@ tests {
     for my $tag (@{$swfed->get_tag_list()}) {
         if ($tag->{detail}) {
             my $got = $swfed->get_tag_detail($index);
-            is_deeply(
-                $got,
-                $expect->[$index],
-                '',
-            );
+            is_deeply($got, $expect->[$index], '');
         }
         $index++;
     }

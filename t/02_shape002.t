@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('replace_shape_data(): test');
+
 my $expect = get_file_contents('/swf/shape002.swf');
 
 tests {
@@ -11,11 +13,7 @@ tests {
     $swfed->input(\$d1);
     $swfed->replace_shape_data(6, \$d2);
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        ''
-    );
+    is ($got, $expect, '');
 };
 
 tests {
@@ -25,11 +23,7 @@ tests {
     $swfed->input($d1);
     $swfed->replace_shape_data(6, $d2);
     my $got = $swfed->output();
-    is (
-        $got,
-        $expect,
-        ''
-    );
+    is ($got, $expect, '');
 };
 
 done_testing();

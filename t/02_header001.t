@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('get_header_into(): test');
+
 my $expect = {
     compress => 0,
     version  => 4,
@@ -16,11 +18,7 @@ tests {
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
     my $got = $swfed->get_header_info();
-    is_deeply(
-        $got,
-        $expect,
-        '',
-    );
+    is_deeply($got, $expect, '');
 };
 
 tests {
@@ -28,11 +26,7 @@ tests {
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
     my $got = $swfed->get_header_info();
-    is_deeply(
-        $got,
-        $expect,
-        '',
-    );
+    is_deeply($got, $expect, '');
 };
 
 done_testing();

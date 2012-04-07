@@ -2,6 +2,8 @@ use t::Utils;
 use Test::More;
 use SWFEditor;
 
+note('get_tag_list(): test');
+
 my $expect = [
     {
         code    => 9,
@@ -55,11 +57,7 @@ tests {
     my $swfed = SWFEditor->new();
     $swfed->input(\$d1);
     my $got = $swfed->get_tag_list();
-    is_deeply(
-        $got,
-        $expect,
-        '',
-    );
+    is_deeply($got, $expect, '');
 };
 
 tests {
@@ -67,11 +65,7 @@ tests {
     my $swfed = SWFEditor->new();
     $swfed->input($d1);
     my $got = $swfed->get_tag_list();
-    is_deeply(
-        $got,
-        $expect,
-        '',
-    );
+    is_deeply($got, $expect, '');
 };
 
 done_testing();
