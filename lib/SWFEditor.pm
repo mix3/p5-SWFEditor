@@ -200,6 +200,16 @@ sub remove_tag {
     return $self->_remove_tag($tag_seqno, $tag_seqno_in_sprite);
 }
 
+sub replace_mld_data {
+    my $self     = shift;
+    my $sound_id = shift;
+    my $data     = shift;
+    return $self->_replace_mld_data (
+        $sound_id,
+        _load($data),
+    );
+}
+
 sub _load {
     my $input = shift;
     if (ref($input) eq 'SCALAR') {
