@@ -237,7 +237,7 @@ _replace_png_data(swf, image_id, data, data_len, opts)
             if (SvTYPE(hv) != SVt_PVHV) {
                 croak("hashref expected");
             }
-            sv_rgb15 = newSVpv("rgb15", 0);
+            sv_rgb15 = sv_2mortal(newSVpv("rgb15", 0));
             he_rgb15 = hv_fetch_ent(hv, sv_rgb15, 0, 0);
             if (he_rgb15) {
                 rgb15 = SvIV(HeVAL(he_rgb15));
@@ -432,12 +432,12 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
         if (SvROK(opts)) {
             hv = (HV*)SvRV(opts);
             if (SvTYPE(hv) == SVt_PVHV) {
-                sv_rgb15 = newSVpv("rgb15", 0);
+                sv_rgb15 = sv_2mortal(newSVpv("rgb15", 0));
                 he_rgb15 = hv_fetch_ent(hv, sv_rgb15, 0, 0);
                 if (he_rgb15) {
                     rgb15 = SvIV(HeVAL(he_rgb15));
                 }
-                sv_without_converting = newSVpv("without_converting", 0);
+                sv_without_converting = sv_2mortal(newSVpv("without_converting", 0));
                 he_without_converting = hv_fetch_ent(hv, sv_without_converting, 0, 0);
                 if (he_without_converting) {
                     without_converting = SvIV(HeVAL(he_without_converting));
@@ -742,12 +742,12 @@ set_header_info(swf, header_info)
         }
         hv_iterinit(hv);
 
-        sv_compress = newSVpv("compress", 0);
-        sv_version  = newSVpv("version",  0);
-        sv_x_min    = newSVpv("x_min",    0);
-        sv_y_min    = newSVpv("y_min",    0);
-        sv_x_max    = newSVpv("x_max",    0);
-        sv_y_max    = newSVpv("y_max",    0);
+        sv_compress = sv_2mortal(newSVpv("compress", 0));
+        sv_version  = sv_2mortal(newSVpv("version",  0));
+        sv_x_min    = sv_2mortal(newSVpv("x_min",    0));
+        sv_y_min    = sv_2mortal(newSVpv("y_min",    0));
+        sv_x_max    = sv_2mortal(newSVpv("x_max",    0));
+        sv_y_max    = sv_2mortal(newSVpv("y_max",    0));
         
         if (hv_exists_ent(hv, sv_compress, 0)) {
             HE *he = hv_fetch_ent(hv, sv_compress, 0, 0);
