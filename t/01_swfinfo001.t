@@ -265,38 +265,32 @@ frame_rate=8.0  frame_count=40
 [84] tag=End(0)
 EXPECT
 
-tests {
-    SKIP: {
-        eval {
-            require Capture::Tiny;
-            Capture::Tiny->import(qw/capture/);
-        };
-        skip 'Capture::Tiny not installed', 2 if ($@);
+SKIP: {
+    eval { require Capture::Tiny };
+    skip 'Capture::Tiny not installed', 1 if ($@);
+    tests {
         my $d1    = get_file_contents('/resource/saitama.swf');
         my $swfed = SWFEditor->new();
         $swfed->input(\$d1);
-        my $got = capture {
+        my $got = Capture::Tiny::capture(sub{
             $swfed->swf_info();
-        };
+        });
         is($got, $expect, 'swfinfo001.phpt');
-    }
-};
+    };
+}
 
-tests {
-    SKIP: {
-        eval {
-            require Capture::Tiny;
-            Capture::Tiny->import(qw/capture/);
-        };
-        skip 'Capture::Tiny not installed', 2 if ($@);
+SKIP: {
+    eval { require Capture::Tiny };
+    skip 'Capture::Tiny not installed', 1 if ($@);
+    tests {
         my $d1    = get_file_path('/resource/saitama.swf');
         my $swfed = SWFEditor->new();
         $swfed->input($d1);
-        my $got = capture {
+        my $got = Capture::Tiny::capture(sub{
             $swfed->swf_info();
-        };
+        });
         is($got, $expect, 'swfinfo001.phpt');
-    }
-};
+    };
+}
 
 done_testing();

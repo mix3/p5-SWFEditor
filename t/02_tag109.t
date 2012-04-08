@@ -8,36 +8,30 @@ my $expect = <<"EXPECT";
 tag=SetBackgroundColor(9)  length=3
 EXPECT
 
-tests {
-    SKIP: {
-        eval {
-            require Capture::Tiny;
-            Capture::Tiny->import(qw/capture/);
-        };
-        skip 'Capture::Tiny not installed', 2 if ($@);
+SKIP: {
+    eval { require Capture::Tiny };
+    skip 'Capture::Tiny not installed', 1 if ($@);
+    tests {
         my $d1    = get_file_contents('/tag/textvar.tag.0');
         my $swfed = SWFEditor->new();
-        my $got = capture {
+        my $got   = Capture::Tiny::capture(sub{
             $swfed->print_tag_data(\$d1);
-        };
+        });
         is($got, $expect, '');
-    }
-};
+    };
+}
 
-tests {
-    SKIP: {
-        eval {
-            require Capture::Tiny;
-            Capture::Tiny->import(qw/capture/);
-        };
-        skip 'Capture::Tiny not installed', 2 if ($@);
+SKIP: {
+    eval { require Capture::Tiny };
+    skip 'Capture::Tiny not installed', 1 if ($@);
+    tests {
         my $d1    = get_file_path('/tag/textvar.tag.0');
         my $swfed = SWFEditor->new();
-        my $got = capture {
+        my $got   = Capture::Tiny::capture(sub{
             $swfed->print_tag_data($d1);
-        };
+        });
         is($got, $expect, '');
-    }
-};
+    };
+}
 
 done_testing();
