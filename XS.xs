@@ -111,6 +111,7 @@ swf_info(swf)
         swf_object_t *swf;
     CODE:
         swf_object_print(swf);
+        fflush(stdout);
         RETVAL = 1;
     OUTPUT:
         RETVAL
@@ -1049,6 +1050,7 @@ _print_tag_data(swf, data, data_len)
         int           ret;
     CODE:
         ret = swf_object_print_tagdata(swf, (unsigned char *)data, data_len);
+        fflush(stdout);
         if (ret) {
             RETVAL = 0;
         } else {
