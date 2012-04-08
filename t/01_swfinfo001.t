@@ -1,5 +1,6 @@
 use t::Utils;
 use Test::More;
+use SWFEditor;
 
 note('swf_info() test');
 
@@ -264,11 +265,38 @@ frame_rate=8.0  frame_count=40
 [84] tag=End(0)
 EXPECT
 
-#my $expect = $swfinfo.$swfinfo;
+tests {
+    SKIP: {
+        eval {
+            require Capture::Tiny;
+            Capture::Tiny->import(qw/capture/);
+        };
+        skip 'Capture::Tiny not installed', 2 if ($@);
+        my $d1    = get_file_contents('/resource/saitama.swf');
+        my $swfed = SWFEditor->new();
+        $swfed->input(\$d1);
+        my $got = capture {
+            $swfed->swf_info();
+        };
+        is($got, $expect, 'swfinfo001.phpt');
+    }
+};
 
 tests {
-    my $got = `perl -I lib/ t/01_swfinfo001.pl`;
-    is($got, $expect, 'swfinfo001.phpt');
+    SKIP: {
+        eval {
+            require Capture::Tiny;
+            Capture::Tiny->import(qw/capture/);
+        };
+        skip 'Capture::Tiny not installed', 2 if ($@);
+        my $d1    = get_file_path('/resource/saitama.swf');
+        my $swfed = SWFEditor->new();
+        $swfed->input($d1);
+        my $got = capture {
+            $swfed->swf_info();
+        };
+        is($got, $expect, 'swfinfo001.phpt');
+    }
 };
 
 done_testing();
