@@ -27,7 +27,7 @@
 | replace_tag_contents_by_cid          | _replace_tag_contents_by_cid    |                                                          | 02_tag106.t          |
 | is_shape_tag_data                    | _is_shape_tag_data              | 01_isshapetag001.t                                       |                      |
 | is_bitmap_tag_data                   | _is_bitmap_tag_data             | 01_isbitmaptag001.t                                      |                      |
-| print_tag_data                       | _print_tag_data                 |                                                          |                      |
+| print_tag_data                       | _print_tag_data                 |                                                          | 02_tag109.t          |
 | remove_tag                           | _remove_tag                     |                                                          | 02_tag107.t          |
 |                                      |                                 |                                                          | 02_tag108.t          |
 +--------------------------------------+---------------------------------+----------------------------------------------------------+----------------------+
