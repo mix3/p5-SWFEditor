@@ -1,5 +1,6 @@
 use 5.008;
 use ExtUtils::MakeMaker;
+use lib 'inc';
 use Devel::CheckLib;
 
 check_lib_or_exit( lib => ['z', 'png', 'gif'] );
