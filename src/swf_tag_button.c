@@ -140,7 +140,7 @@ swf_tag_button_character_get_refcid_list(swf_tag_t *tag, int *cid_list_num) {
             if (cid_list_alloc <= *cid_list_num) {
                 int *tmp;
                 cid_list_alloc *= 2;
-                tmp = realloc(cid_list, cid_list_alloc);
+                tmp = realloc(cid_list, sizeof(int) * cid_list_alloc);
                 if (tmp == NULL) {
                     fprintf(stderr, "swf_tag_shape_bitmap_get_refcid_list: Can't realloc memory (%p, %d)\n", cid_list, cid_list_alloc);
                     free(cid_list);
