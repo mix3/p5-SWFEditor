@@ -1,5 +1,9 @@
 Revision history for Perl extension SWFEditor
 
+0.04_01
+    2012-05-07
+        - change 'die' to 'croak'
+
 0.04
     2012-04-18
         - update SWFED_VERSION from 0.56 to 0.57
