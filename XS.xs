@@ -1135,7 +1135,7 @@ apply_shape_matrix_factor(swf, shape_id, scale_x, scale_y, rotate_rad, trans_x, 
     PREINIT:
         int           result;
     CODE:
-        result = swf_object_apply_shapematrix_factor(swf, shape_id,
+        result = swf_object_apply_shapematrix_factor(swf, shape_id, -1,
                                                      scale_x, scale_y, rotate_rad,
                                                      trans_x, trans_y);
         if (result) {
@@ -1157,7 +1157,7 @@ apply_shape_rect_factor(swf, shape_id, scale_x, scale_y, trans_x, trans_y)
     PREINIT:
         int           result;
     CODE:
-        result = swf_object_apply_shaperect_factor(swf, shape_id,
+        result = swf_object_apply_shaperect_factor(swf, shape_id, -1,
                                                      scale_x, scale_y,
                                                      trans_x, trans_y);
         if (result) {

@@ -768,6 +768,7 @@ swf_object_adjust_shapebitmap(swf_object_t *swf, int bitmap_id,
                         if (bitmap_id_list[i] == bitmap_id) {
                             swf_tag_shape_detail_t *swf_tag_shape = tag->detail;
                             swf_tag_apply_shape_matrix_factor(tag, swf_tag_shape->shape_id,
+                                                              bitmap_id,
                                                               width_scale, height_scale,
                                                               0, 0, 0, swf);
                             break;
@@ -792,6 +793,7 @@ swf_object_adjust_shapebitmap(swf_object_t *swf, int bitmap_id,
                         if (bitmap_id_list[i] == bitmap_id) {
                             swf_tag_shape_detail_t *swf_tag_shape = tag->detail;
                             swf_tag_apply_shape_rect_factor(tag, swf_tag_shape->shape_id,
+                                                            bitmap_id,
                                                             width_scale, height_scale,
                                                             0, 0, swf);
                             break;
@@ -812,7 +814,7 @@ swf_object_adjust_shapebitmap(swf_object_t *swf, int bitmap_id,
                     for (i = 0 ; i < bitmap_id_list_num ; i++) { 
                         if (bitmap_id_list[i] == bitmap_id) {
                             swf_tag_shape_detail_t *swf_tag_shape = tag->detail;
-                            swf_tag_apply_shape_type_tilled(tag, swf_tag_shape->shape_id, swf);
+                            swf_tag_apply_shape_type_tilled(tag, swf_tag_shape->shape_id, bitmap_id, swf);
                         }
                     }
                     free(bitmap_id_list);
@@ -1545,6 +1547,15 @@ swf_object_replace_movieclip(swf_object_t *swf,
                 trans_table_replace_refcid_recursive(s->tag, cid_trans_table);
                 free(tag->data);
                 tag->data = NULL;
+            } else {
+                int refcid, to_refcid;                
+                refcid = swf_tag_get_refcid(tag);
+                if (refcid > 0) {
+                    to_refcid = trans_table_get(cid_trans_table, refcid);
+                    if (refcid != to_refcid) {
+                        swf_tag_replace_refcid(tag, to_refcid);
+                    }
+                }
             }
             // extract tag before SpriteTag
             prev_sprite_tag->next = swf_tag_move(tag);
@@ -1601,6 +1612,7 @@ swf_object_replace_movieclip(swf_object_t *swf,
 
 int
 swf_object_apply_shapematrix_factor(swf_object_t *swf, int shape_id,
+                                    int bitmap_id,
                                     double scale_x, double scale_y,
                                     double rotate_rad,
                                     signed int trans_x, signed int trans_y) {
@@ -1612,6 +1624,7 @@ swf_object_apply_shapematrix_factor(swf_object_t *swf, int shape_id,
     }
     for (tag=swf->tag_head ; tag ; tag=tag->next) {
         result = swf_tag_apply_shape_matrix_factor(tag, shape_id,
+                                                   bitmap_id,
                                                    scale_x, scale_y,
                                                    rotate_rad,
                                                    trans_x, trans_y,
@@ -1625,6 +1638,7 @@ swf_object_apply_shapematrix_factor(swf_object_t *swf, int shape_id,
 
 int
 swf_object_apply_shaperect_factor(swf_object_t *swf, int shape_id,
+                                  int bitmap_id, 
                                   double scale_x, double scale_y,
                                   signed int trans_x, signed int trans_y) {
     int result = 1;
@@ -1634,7 +1648,7 @@ swf_object_apply_shaperect_factor(swf_object_t *swf, int shape_id,
         return 1;
     }
     for (tag=swf->tag_head ; tag ; tag=tag->next) {
-        result = swf_tag_apply_shape_rect_factor(tag, shape_id,
+        result = swf_tag_apply_shape_rect_factor(tag, shape_id, bitmap_id,
                                                  scale_x, scale_y,
                                                  trans_x, trans_y,
                                                  swf);
@@ -1646,7 +1660,8 @@ swf_object_apply_shaperect_factor(swf_object_t *swf, int shape_id,
 }
 
 int
-swf_object_apply_shapetype_tilled(swf_object_t *swf,int shape_id) {
+swf_object_apply_shapetype_tilled(swf_object_t *swf,int shape_id,
+                                  int bitmap_id) {
     int result = 1;
     swf_tag_t *tag;
     if (swf == NULL) {
@@ -1654,7 +1669,7 @@ swf_object_apply_shapetype_tilled(swf_object_t *swf,int shape_id) {
         return 1;
     }
     for (tag=swf->tag_head ; tag ; tag=tag->next) {
-        result = swf_tag_apply_shape_type_tilled(tag, shape_id, swf);
+        result = swf_tag_apply_shape_type_tilled(tag, shape_id, bitmap_id, swf);
         if (! result) {
             break;
         }

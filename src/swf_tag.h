@@ -104,17 +104,20 @@ extern int swf_tag_replace_edit_string(swf_tag_t *tag,
                                        struct swf_object_ *swf);
 
 extern int swf_tag_apply_shape_matrix_factor(swf_tag_t *tag, int shape_id,
+                                             int bitmap_id,
                                              double scale_x, double scale_y,
                                              double rotate_rad,
                                              signed int trans_x,
                                              signed int trans_y,
                                              struct swf_object_ *swf);
 extern int swf_tag_apply_shape_rect_factor(swf_tag_t *tag, int shape_id,
-                                             double scale_x, double scale_y,
-                                             signed int trans_x,
-                                             signed int trans_y,
-                                             struct swf_object_ *swf);
+                                           int bitmap_id,
+                                           double scale_x, double scale_y,
+                                           signed int trans_x,
+                                           signed int trans_y,
+                                           struct swf_object_ *swf);
 extern int swf_tag_apply_shape_type_tilled(swf_tag_t *tag, int shape_id,
+                                           int bitmap_id,
                                            struct swf_object_ *swf);
 
 extern swf_tag_t *swf_tag_create_action_setvariables(y_keyvalue_t *kv);

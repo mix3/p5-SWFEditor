@@ -142,15 +142,18 @@ extern int swf_object_replace_movieclip(swf_object_t *swf,
                                         int swf_data_len);
 
 extern int swf_object_apply_shapematrix_factor(swf_object_t *swf,int shape_id,
+                                               int bitmap_id,
                                                double scale_x, double scale_y,
                                                double rotate_rad,
                                                signed int trans_x,
                                                signed int trans_y);
 extern int swf_object_apply_shaperect_factor(swf_object_t *swf,int shape_id,
+                                             int bitmap_id,
                                              double scale_x, double scale_y,
                                              signed int trans_x,
                                              signed int trans_y);
-extern int swf_object_apply_shapetype_tilled(swf_object_t *swf,int shape_id);
+extern int swf_object_apply_shapetype_tilled(swf_object_t *swf,int shape_id,
+                                             int bitmap_id);
 
 
 /* --- */

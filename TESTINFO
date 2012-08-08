@@ -37,6 +37,7 @@
 |                                      |                                 | 01_movieclip002.t and purge                              |                      |
 |                                      |                                 | 01_movieclip003.t instancename search from nested symbol |                      |
 |                                      |                                 | 01_movieclip004.t 300 defineshape & placeobject          |                      |
+|                                      |                                 | 01_movieclip005.t with font specify                      |                      |
 +--------------------------------------+---------------------------------+----------------------------------------------------------+----------------------+
 | [shape]                              |                                 |                                                          |                      |
 +--------------------------------------+---------------------------------+----------------------------------------------------------+----------------------+
@@ -60,6 +61,7 @@
 | replace_bitmap_data                  | _replace_bitmap_data            | 01_bitmap003.t width                                     |                      |
 |                                      |                                 | 01_bitmap004.t width                                     |                      |
 |                                      |                                 | 01_bitmap005.t Lossless with alpha0                      |                      |
+|                                      |                                 | 01_bitmap006.t select bitmap from defineshape fillstyles |                      |
 | replace_png_data                     | _replace_png_data               | 01_png001.t (transparent)                                | 02_png002.t          |
 |                                      |                                 |                                                          | 02_png003.t          |
 |                                      |                                 |                                                          | 02_png004.t          |
