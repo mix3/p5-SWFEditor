@@ -537,6 +537,9 @@ swf_tag_shape_apply_matrix_factor(void *detail, int shape_id, int bitmap_id,
                                             trans_x, trans_y);
                 }
                 break;
+            case 0x00: // solid
+                // nothing to do
+                break;
             default:
                 fprintf(stderr, "swf_tag_shape_apply_matrix_factor: unknown fill_style->type=%d\n",
                         fill_style->type);

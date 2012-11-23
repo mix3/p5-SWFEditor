@@ -6,8 +6,8 @@ use warnings;
 
 use Carp;
 
-our $VERSION       = '0.05';
-our $SWFED_VERSION = '0.58';
+our $VERSION       = '0.06';
+our $SWFED_VERSION = '0.59';
 
 require XSLoader;
 XSLoader::load('SWFEditor', $VERSION);
