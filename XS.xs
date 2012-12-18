@@ -145,9 +145,8 @@ set_action_variables(swf, hash_ref)
             int  vlen = (int)len;
             y_keyvalue_set(kv, k, klen, v, vlen);
         }
-        swf_object_insert_action_setvariables(swf, kv);
+        RETVAL = swf_object_insert_action_setvariables(swf, kv);
         y_keyvalue_close(kv);
-        RETVAL = 1;
     OUTPUT:
         RETVAL
 
@@ -180,9 +179,8 @@ replace_action_strings(swf, hash_ref)
             int  vlen = (int)len;
             y_keyvalue_set(kv, k, klen, v, vlen);
         }
-        swf_object_replace_action_strings(swf, kv);
+        RETVAL = swf_object_replace_action_strings(swf, kv);
         y_keyvalue_close(kv);
-        RETVAL = 1;
     OUTPUT:
         RETVAL
 
@@ -195,29 +193,20 @@ _replace_movie_clip(swf, instance_name, swf_data, swf_data_len, unused_cid_purge
         int           unused_cid_purge;
     PREINIT:
         int           instance_name_len = 0;
-        int           result            = 0;
     CODE:
         instance_name_len = strlen((char *)instance_name);
-        result = swf_object_replace_movieclip(swf, instance_name,
+        RETVAL = swf_object_replace_movieclip(swf, instance_name,
                                                    instance_name_len,
                                                    swf_data,
                                                    swf_data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
-int
+void
 purge_useless_contents(swf)
         swf_object_t *swf;
     CODE:
         swf_object_purge_contents(swf);
-        RETVAL = 1;
-    OUTPUT:
-        RETVAL
 
 int
 _replace_png_data(swf, image_id, data, data_len, opts)
@@ -227,7 +216,6 @@ _replace_png_data(swf, image_id, data, data_len, opts)
         int           data_len;
         SV           *opts;
     PREINIT: 
-        int           result =  1;
         int           rgb15  = -1;
         HV            *hv;
         SV            *sv_rgb15;
@@ -248,11 +236,6 @@ _replace_png_data(swf, image_id, data, data_len, opts)
                                                  (unsigned char *)data,
                                                  (unsigned long) data_len,
                                                  rgb15);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -261,8 +244,7 @@ set_shape_adjust_mode(swf, mode)
         swf_object_t *swf;
         unsigned long mode;
     CODE:
-        swf_object_set_shape_adjust_mode(swf, mode);
-        RETVAL = 1;
+        RETVAL = swf_object_set_shape_adjust_mode(swf, mode);
     OUTPUT:
         RETVAL
 
@@ -272,15 +254,9 @@ get_edit_string(swf, var_name)
         char         *var_name;
     PREINIT:
         int           var_name_len = strlen(var_name);
-        char         *data = NULL;
         int          error = 0;
     CODE:
-        data = swf_object_get_editstring(swf, var_name, var_name_len, &error);
-        if (data == NULL) {
-            RETVAL = 0;
-        } else {
-            RETVAL = data;
-        }
+        RETVAL = swf_object_get_editstring(swf, var_name, var_name_len, &error);
     OUTPUT:
         RETVAL
 
@@ -292,15 +268,9 @@ replace_edit_string(swf, var_name, ini_text)
     PREINIT:
         int           var_name_len = strlen(var_name);
         int           ini_text_len = strlen(ini_text);
-        int           result = 0;
         char         *data   = NULL;
     CODE:
-        result = swf_object_replace_editstring(swf, var_name, var_name_len, ini_text, ini_text_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
+        RETVAL = swf_object_replace_editstring(swf, var_name, var_name_len, ini_text, ini_text_len);
     OUTPUT:
         RETVAL
 
@@ -331,7 +301,12 @@ get_shape_data(swf, cid)
         unsigned long  data_len = 0;
     CODE:
         data = swf_object_get_shapedata(swf, cid, &data_len);
-        RETVAL = newSVpv(data, data_len);
+        if (NULL == data) {
+            RETVAL = newSV(0);
+        }
+        else {
+            RETVAL = newSVpvn(data, data_len);
+        }
     OUTPUT:
         RETVAL
 
@@ -341,15 +316,8 @@ _replace_shape_data(swf, cid, data, data_len)
         long           cid;
         char          *data;
         unsigned long  data_len;
-    PREINIT:
-        int            result = 0;
     CODE:
-        result = swf_object_replace_shapedata(swf, cid, (unsigned char *)data, data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
+        RETVAL = swf_object_replace_shapedata(swf, cid, (unsigned char *)data, data_len);
     OUTPUT:
         RETVAL
 
@@ -359,17 +327,10 @@ _replace_gif_data(swf, image_id, data, data_len)
         int           image_id;
         char         *data;
         int           data_len;
-    PREINIT:
-        int            result = 0;
     CODE:
-        result = swf_object_replace_gifdata(swf, image_id,
+        RETVAL = swf_object_replace_gifdata(swf, image_id,
                                                  (unsigned char *)data,
                                                  (unsigned long) data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -501,11 +462,8 @@ _replace_bitmap_data(swf, image_cond, data, data_len, alpha_data, alpha_data_len
                 croak("Unknown Bitmap Format");
             }
         }
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
+
+        RETVAL = result;
     OUTPUT:
         RETVAL
 
@@ -796,7 +754,7 @@ get_tag_data(swf, seqno)
         if (data == NULL) {
             croak("getTagData: Can't get_tagdata\n");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -812,7 +770,7 @@ get_tag_data_by_cid(swf, cid)
         if (data == NULL) {
             croak("getTagDataByCID: Can't get_tagdata_bycid\n");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -822,16 +780,9 @@ _replace_tag_data(swf, seqno, data, data_len)
         long          seqno;
         char         *data;
         int           data_len;
-    PREINIT:
-        int           result = 0;
     CODE:
-        result = swf_object_replace_tagdata(swf, seqno,
+        RETVAL = swf_object_replace_tagdata(swf, seqno,
                                             (unsigned char *)data, data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -841,17 +792,10 @@ _replace_tag_data_by_cid(swf, cid, data, data_len)
         long          cid;
         char         *data;
         int           data_len;
-    PREINIT:
-        int           result = 0;
     CODE:
-        result = swf_object_replace_tagdata_bycid(swf, cid,
+        RETVAL = swf_object_replace_tagdata_bycid(swf, cid,
                                                   (unsigned char *)data,
                                                   data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -867,7 +811,7 @@ get_tag_contents_by_cid(swf, cid)
         if (data == NULL) {
             croak("getTagContentsByCID: Can't get_tagcontents_bycid\n");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -877,17 +821,10 @@ _replace_tag_contents_by_cid(swf, cid, data, data_len)
         long          cid;
         char         *data;
         int           data_len;
-    PREINIT:
-        int           result = 0;
     CODE:
-        result = swf_object_replace_tagcontents_bycid(swf, cid,
+        RETVAL = swf_object_replace_tagcontents_bycid(swf, cid,
                                                       (unsigned char *)data,
                                                       data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -897,11 +834,7 @@ _is_shape_tag_data(swf, data, data_len)
         char         *data;
         int           data_len;
     CODE:
-        if (swf_object_is_shape_tagdata(data, data_len) == 0) {
-             RETVAL = 0;
-        } else {
-             RETVAL = 1;
-        }
+        RETVAL = swf_object_is_shape_tagdata(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -911,11 +844,7 @@ _is_bitmap_tag_data(swf, data, data_len)
         char         *data;
         int           data_len;
     CODE:
-        if (swf_object_is_bitmap_tagdata(data, data_len) == 0) {
-             RETVAL = 0;
-        } else {
-             RETVAL = 1;
-        }
+        RETVAL = swf_object_is_bitmap_tagdata(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -931,7 +860,7 @@ get_jpeg_data(swf, image_id)
         if (data == NULL) {
             croak("get_jpeg_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -947,7 +876,7 @@ get_png_data(swf, image_id)
         if (data == NULL) {
             croak("get_png_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -963,7 +892,7 @@ get_jpeg_alpha(swf, image_id)
         if (data == NULL) {
             croak("get_jpeg_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -1000,7 +929,7 @@ get_sound_data(swf, sound_id)
         if (data == NULL) {
             croak("get_jpeg_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -1010,17 +939,10 @@ _replace_mld_data(swf, sound_id, data, data_len)
         long          sound_id;
         char         *data;
         int           data_len;
-    PREINIT:
-        int           result = 0;
     CODE:
-        result = swf_object_replace_melodata(swf, sound_id,
+        RETVAL = swf_object_replace_melodata(swf, sound_id,
                                              (unsigned char *)data,
                                              (unsigned long) data_len);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -1029,15 +951,8 @@ _remove_tag(swf, tag_seqno, tag_seqno_in_sprite)
         swf_object_t *swf;
         long          tag_seqno;
         long          tag_seqno_in_sprite;
-    PREINIT:
-        int           ret;
     CODE:
-        ret = swf_object_remove_tag(swf, tag_seqno, tag_seqno_in_sprite);
-        if (ret) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
+        RETVAL = swf_object_remove_tag(swf, tag_seqno, tag_seqno_in_sprite);
     OUTPUT:
         RETVAL
 
@@ -1049,13 +964,8 @@ _print_tag_data(swf, data, data_len)
     PREINIT:
         int           ret;
     CODE:
-        ret = swf_object_print_tagdata(swf, (unsigned char *)data, data_len);
+        RETVAL = swf_object_print_tagdata(swf, (unsigned char *)data, data_len);
         fflush(stdout);
-        if (ret) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -1071,7 +981,7 @@ get_action_data(swf, tag_seqno)
         if (data == NULL) {
             croak("get_action_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -1111,15 +1021,8 @@ get_shape_id_list_by_bitmap_ref(swf, bitmap_id)
 int
 convert_bitmap_data_to_jpeg_tag(swf)
         swf_object_t *swf;
-    PREINIT:
-        int           ret;
     CODE:
-        ret = swf_object_convert_bitmapdata_tojpegtag(swf);
-        if (ret) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
+        RETVAL = swf_object_convert_bitmapdata_tojpegtag(swf);
     OUTPUT:
         RETVAL
 
@@ -1132,17 +1035,10 @@ apply_shape_matrix_factor(swf, shape_id, scale_x, scale_y, rotate_rad, trans_x, 
         double        rotate_rad;
         long          trans_x;
         long          trans_y;
-    PREINIT:
-        int           result;
     CODE:
-        result = swf_object_apply_shapematrix_factor(swf, shape_id, -1,
+        RETVAL = swf_object_apply_shapematrix_factor(swf, shape_id, -1,
                                                      scale_x, scale_y, rotate_rad,
                                                      trans_x, trans_y);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -1157,14 +1053,9 @@ apply_shape_rect_factor(swf, shape_id, scale_x, scale_y, trans_x, trans_y)
     PREINIT:
         int           result;
     CODE:
-        result = swf_object_apply_shaperect_factor(swf, shape_id, -1,
+        RETVAL = swf_object_apply_shaperect_factor(swf, shape_id, -1,
                                                      scale_x, scale_y,
                                                      trans_x, trans_y);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
 
@@ -1206,16 +1097,11 @@ _replace_jpeg_data(swf, image_id, data, data_len, alpha_data, alpha_data_len)
     PREINIT:
         int           result = 0;
     CODE:
-        result = swf_object_replace_jpegdata(swf, image_id,
+        RETVAL = swf_object_replace_jpegdata(swf, image_id,
                                              (unsigned char *)data,
                                              (unsigned long) data_len,
                                              (unsigned char *)alpha_data,
                                              (unsigned long) alpha_data_len,
                                              0);
-        if (result) {
-            RETVAL = 0;
-        } else {
-            RETVAL = 1;
-        }
     OUTPUT:
         RETVAL
