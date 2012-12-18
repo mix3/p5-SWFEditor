@@ -301,7 +301,12 @@ get_shape_data(swf, cid)
         unsigned long  data_len = 0;
     CODE:
         data = swf_object_get_shapedata(swf, cid, &data_len);
-        RETVAL = newSVpv(data, data_len);
+        if (NULL == data) {
+            RETVAL = newSV(0);
+        }
+        else {
+            RETVAL = newSVpvn(data, data_len);
+        }
     OUTPUT:
         RETVAL
 
@@ -749,7 +754,7 @@ get_tag_data(swf, seqno)
         if (data == NULL) {
             croak("getTagData: Can't get_tagdata\n");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -765,7 +770,7 @@ get_tag_data_by_cid(swf, cid)
         if (data == NULL) {
             croak("getTagDataByCID: Can't get_tagdata_bycid\n");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -806,7 +811,7 @@ get_tag_contents_by_cid(swf, cid)
         if (data == NULL) {
             croak("getTagContentsByCID: Can't get_tagcontents_bycid\n");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -855,7 +860,7 @@ get_jpeg_data(swf, image_id)
         if (data == NULL) {
             croak("get_jpeg_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -871,7 +876,7 @@ get_png_data(swf, image_id)
         if (data == NULL) {
             croak("get_png_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -887,7 +892,7 @@ get_jpeg_alpha(swf, image_id)
         if (data == NULL) {
             croak("get_jpeg_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -924,7 +929,7 @@ get_sound_data(swf, sound_id)
         if (data == NULL) {
             croak("get_jpeg_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
@@ -976,7 +981,7 @@ get_action_data(swf, tag_seqno)
         if (data == NULL) {
             croak("get_action_data: error");
         }
-        RETVAL = newSVpv(data, data_len);
+        RETVAL = newSVpvn(data, data_len);
     OUTPUT:
         RETVAL
 
