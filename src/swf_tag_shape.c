@@ -595,7 +595,7 @@ swf_tag_shape_apply_rect_factor(void *detail, int shape_id, int bitmap_id,
 
 int
 swf_tag_shape_apply_type_tilled(void *detail, int shape_id, int bitmap_id) {
-    int i, count;
+    int i;
     swf_tag_shape_detail_t *swf_tag_shape = (swf_tag_shape_detail_t *) detail;
     swf_fill_style_array_t *fill_styles;;
     swf_shape_record_t *shape_record = NULL;

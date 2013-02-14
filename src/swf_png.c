@@ -234,7 +234,10 @@ pngconv_png2lossless(unsigned char *png_data, unsigned long png_data_len,
                 free(*colormap);
                 *colormap = NULL;
                 free(indices_data);
-                // free png image datas
+                for (y=0 ; y < png_height ; y++) {
+                    free(png_image_data[y]);
+                }
+                free(png_image_data);
                 return NULL;
             }
             bitstream_input(bs, png_image_data[y], png_width);
