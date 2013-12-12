@@ -597,7 +597,7 @@ int
 swf_tag_shape_apply_type_tilled(void *detail, int shape_id, int bitmap_id) {
     int i;
     swf_tag_shape_detail_t *swf_tag_shape = (swf_tag_shape_detail_t *) detail;
-    swf_fill_style_array_t *fill_styles;;
+    swf_fill_style_array_t *fill_styles;
     swf_shape_record_t *shape_record = NULL;
 
     if (detail == NULL) {

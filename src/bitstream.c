@@ -525,6 +525,16 @@ bitstream_length(bitstream_t *bs) {
     return bs->data_len;
 }
 
+unsigned long
+bitstream_hasnext(bitstream_t *bs, int byte_len, int bit_len) {
+    int byte_offset = bs->byte_offset + byte_len;
+    int bit_offset  = bs->bit_offset  + bit_len;
+    if (bs->data_len < (byte_offset + (bit_offset + 7) / 8)) {
+        return 0; // false
+    }
+    return 1; // true
+}
+
 /*
  * utility
  */

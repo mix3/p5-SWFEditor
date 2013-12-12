@@ -223,7 +223,7 @@ swf_action_list_create(void) {
 int
 swf_action_list_parse(bitstream_t *bs, swf_action_list_t *action_list) {
     swf_action_t *action;
-    while (1) {
+    while (bitstream_hasnext(bs, 1, 0)) {
         action = calloc(sizeof(*action), 1);
         if (action == NULL) {
             fprintf(stderr, "Can't alloc memory for action\n");

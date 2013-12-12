@@ -73,6 +73,9 @@ extern int bitstream_realloc(bitstream_t *bs);
 /* direct access */
 extern unsigned char *bitstream_buffer(bitstream_t *bs, unsigned long byte_offset);
 extern unsigned long bitstream_length(bitstream_t *bs);
+extern unsigned long bitstream_hasnext(bitstream_t *bs,
+				       int byte_len, int bit_len);
+
 
 /* utility */
 
