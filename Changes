@@ -1,5 +1,10 @@
 Revision history for Perl extension SWFEditor
 
+0.09
+    2013-12-12
+        - update SWFED_VERSION from 0.60 to 0.61
+        - add test
+
 0.08
     2013-02-14
         - update SWFED_VERSION from 0.59 to 0.60
